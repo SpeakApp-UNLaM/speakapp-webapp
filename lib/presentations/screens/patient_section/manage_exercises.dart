@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:speak_app_web/widgets/list_phonemes.dart';
-import 'package:speak_app_web/widgets/menu_lateral_exercise.dart';
+
+import '../../widgets/list_phonemes.dart';
+import '../../widgets/menu_lateral_exercise.dart';
 
 class ManageExercises extends StatelessWidget {
   const ManageExercises({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:speak_app_web/screens/patient_section/second_tab_bar_manage_patient.dart';
-
-import '../../config/theme/app_theme.dart';
+import '../../../config/theme/app_theme.dart';
+import '../../widgets/text_primary.dart';
+import 'tab_bar_manage_patient.dart';
 
 class ManagePatientView extends StatelessWidget {
   const ManagePatientView({
@@ -22,13 +22,11 @@ class ManagePatientView extends StatelessWidget {
         ),
         Container(
             alignment: Alignment.centerLeft,
-            child: Text("Paciente       Hamiltons",
-                style: TextStyle(
-                  fontSize: 36,
-                  color: colorList[6],
-                  fontFamily: 'IkkaRounded',
-                ))),
-        const SecondTabBarPatient(),
+            child: const TextPrimary(text: "Paciente: Hamiltons")),
+        const SizedBox(
+          height: 30,
+        ),
+        const TabBarPatient(),
       ],
     );
   }

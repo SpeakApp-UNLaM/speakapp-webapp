@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:speak_app_web/screens/patient_section/exercises_results.dart';
-import 'package:speak_app_web/screens/patient_section/manage_exercises.dart';
-import 'package:speak_app_web/screens/patient_section/patient_info.dart';
-import 'package:speak_app_web/screens/patient_section/rfi_results.dart';
-import 'package:speak_app_web/widgets/text_primary.dart';
+import '../../widgets/text_primary.dart';
+import 'exercises_results.dart';
+import 'manage_exercises.dart';
+import 'patient_info.dart';
+import 'rfi_results.dart';
+import 'session_reports.dart';
 
-import '../../widgets/session_reports.dart';
-
-class SecondTabBarPatient extends StatefulWidget {
-  const SecondTabBarPatient({super.key});
+class TabBarPatient extends StatefulWidget {
+  const TabBarPatient({super.key});
 
   @override
-  State<SecondTabBarPatient> createState() => _SecondTabBarPatientState();
+  State<TabBarPatient> createState() => _TabBarPatientState();
 }
 
-class _SecondTabBarPatientState extends State<SecondTabBarPatient>
+class _TabBarPatientState extends State<TabBarPatient>
     with TickerProviderStateMixin {
   late final TabController _tabController;
 
@@ -36,9 +35,9 @@ class _SecondTabBarPatientState extends State<SecondTabBarPatient>
       child: Column(
         children: <Widget>[
           TabBar.secondary(
-            overlayColor: MaterialStatePropertyAll(Colors.transparent),
+            overlayColor: const MaterialStatePropertyAll(Colors.transparent),
             controller: _tabController,
-            tabs: const <Widget>[
+            tabs: const [
               Tab(
                   child: TextPrimary(
                 text: 'Gestionar ejercicios',
@@ -64,7 +63,7 @@ class _SecondTabBarPatientState extends State<SecondTabBarPatient>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: const <Widget>[
+              children: const [
                 ManageExercises(),
                 ExercisesResults(),
                 RFIResults(),

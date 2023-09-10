@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SessionReports extends StatelessWidget {
-  const SessionReports({
+class CalendarView extends StatelessWidget {
+  const CalendarView({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Text("asd");
+    return Text("3");
   }
 }

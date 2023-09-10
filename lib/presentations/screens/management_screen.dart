@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:speak_app_web/screens/patient_section/manage_patient_view.dart';
-
 import '../widgets/text_primary.dart';
+import 'calendar_section/calendar_view.dart';
+import 'message_section/message_view.dart';
+import 'patient_section/manage_patient_view.dart';
 
 class ManagementScreen extends StatefulWidget {
   const ManagementScreen({Key? key}) : super(key: key);
 
   @override
-  _ManagementScreenState createState() => _ManagementScreenState();
+  ManagementScreenState createState() => ManagementScreenState();
 }
 
-class _ManagementScreenState extends State<ManagementScreen>
+class ManagementScreenState extends State<ManagementScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
 
@@ -32,23 +33,27 @@ class _ManagementScreenState extends State<ManagementScreen>
       appBar: AppBar(
         title: const TextPrimary(text: 'Speak APP - Administración general'),
         bottom: TabBar(
+          unselectedLabelColor: Colors.white,
+          labelColor: Theme.of(context).primaryColorDark,
+          indicatorColor: Theme.of(context).primaryColorDark,
           overlayColor: const MaterialStatePropertyAll(Colors.transparent),
           controller: _tabController,
           tabs: [
             const Tab(
-              text: 'Pacientes',
               icon: Icon(Icons.supervised_user_circle),
+              child: TextPrimary(text: 'Pacientes'),
             ),
             const Tab(
-              text: 'Mensajes',
               icon: Icon(Icons.message),
+              child: TextPrimary(text: 'Mensajes'),
             ),
             const Tab(
-              text: 'Calendario',
               icon: Icon(Icons.calendar_today),
+              child: TextPrimary(text: 'Calendario'),
             ),
             ElevatedButton(
-                onPressed: () => {}, child: const Text("Generar código")),
+                onPressed: () => {},
+                child: const TextPrimary(text: 'Generar código')),
             const CircleAvatar(
               backgroundImage: NetworkImage(
                   "https://4.bp.blogspot.com/-Jx21kNqFSTU/UXemtqPhZCI/AAAAAAAAh74/BMGSzpU6F48/s1600/funny-cat-pictures-047-001.jpg"),
@@ -59,10 +64,10 @@ class _ManagementScreenState extends State<ManagementScreen>
       ),
       body: TabBarView(
         controller: _tabController, // Asignar el controlador aquí
-        children: const <Widget>[
+        children: const [
           ManagePatientView(),
-          Text("2"),
-          Text("3"),
+          MessageView(),
+          CalendarView(),
         ],
       ),
     );
