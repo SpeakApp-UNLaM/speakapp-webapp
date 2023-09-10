@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:speak_app_web/screens/manage_exercise_screen.dart';
+import 'package:speak_app_web/screens/management_screen.dart';
 
 import 'config/theme/app_theme.dart';
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: AppTheme.theme(),
-      home: const TabBarExample(),
+      home: const ManagementScreen(),
     );
   }
 }
