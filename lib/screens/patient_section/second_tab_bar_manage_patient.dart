@@ -36,6 +36,7 @@ class _SecondTabBarPatientState extends State<SecondTabBarPatient>
       child: Column(
         children: <Widget>[
           TabBar.secondary(
+            overlayColor: MaterialStatePropertyAll(Colors.transparent),
             controller: _tabController,
             tabs: const <Widget>[
               Tab(

@@ -32,19 +32,27 @@ class _ManagementScreenState extends State<ManagementScreen>
       appBar: AppBar(
         title: const TextPrimary(text: 'Speak APP - Administración general'),
         bottom: TabBar(
-          controller: _tabController, // Asignar el controlador aquí
-          tabs: const <Widget>[
-            Tab(
+          overlayColor: const MaterialStatePropertyAll(Colors.transparent),
+          controller: _tabController,
+          tabs: [
+            const Tab(
               text: 'Pacientes',
               icon: Icon(Icons.supervised_user_circle),
             ),
-            Tab(
+            const Tab(
               text: 'Mensajes',
               icon: Icon(Icons.message),
             ),
-            Tab(
+            const Tab(
               text: 'Calendario',
               icon: Icon(Icons.calendar_today),
+            ),
+            ElevatedButton(
+                onPressed: () => {}, child: const Text("Generar código")),
+            const CircleAvatar(
+              backgroundImage: NetworkImage(
+                  "https://4.bp.blogspot.com/-Jx21kNqFSTU/UXemtqPhZCI/AAAAAAAAh74/BMGSzpU6F48/s1600/funny-cat-pictures-047-001.jpg"),
+              backgroundColor: Colors.red,
             ),
           ],
         ),
