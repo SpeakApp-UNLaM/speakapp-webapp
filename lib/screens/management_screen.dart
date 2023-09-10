@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'manage_patient_view.dart';
+import 'package:speak_app_web/screens/patient_section/manage_patient_view.dart';
+
+import '../widgets/text_primary.dart';
 
 class ManagementScreen extends StatefulWidget {
   const ManagementScreen({Key? key}) : super(key: key);
@@ -28,7 +30,7 @@ class _ManagementScreenState extends State<ManagementScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Primary and secondary TabBar'),
+        title: const TextPrimary(text: 'Speak APP - Administración general'),
         bottom: TabBar(
           controller: _tabController, // Asignar el controlador aquí
           tabs: const <Widget>[

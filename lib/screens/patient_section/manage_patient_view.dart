@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:speak_app_web/screens/patient_section/second_tab_bar_manage_patient.dart';
 
-import '../config/theme/app_theme.dart';
-import '../widgets/second_tab_bar_manage_patient.dart';
+import '../../config/theme/app_theme.dart';
 
 class ManagePatientView extends StatelessWidget {
   const ManagePatientView({
