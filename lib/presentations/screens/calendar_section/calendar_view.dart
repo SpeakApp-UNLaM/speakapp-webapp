@@ -7,6 +7,6 @@ class CalendarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("3");
+    return Text("Calendar View");
   }
 }

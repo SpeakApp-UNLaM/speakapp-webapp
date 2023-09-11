@@ -9,29 +9,20 @@ import 'providers/login_provider.dart';
 
 Future<void> main() async {
   Api.configureDio();
-
-  final state = AuthProvider(await SharedPreferences.getInstance());
-
-  state.checkLoggedIn();
-  runApp(MyApp(authProvider: state));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final AuthProvider authProvider;
-
-  const MyApp({super.key, required this.authProvider});
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthProvider>(
-            lazy: false, create: (BuildContext createContext) => authProvider),
-        ChangeNotifierProvider(create: (_) => LoginProvider()),
         Provider<AppRouter>(
           lazy: false,
-          create: (BuildContext createContext) => AppRouter(authProvider),
+          create: (BuildContext createContext) => AppRouter(),
         ),
       ],
       child: Builder(

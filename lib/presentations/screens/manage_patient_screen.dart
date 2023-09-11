@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../config/theme/app_theme.dart';
 import '../../widgets/text_primary.dart';
-import 'tab_bar_manage_patient.dart';
+import 'tab_bar_patient.dart';
 
-class ManagePatientView extends StatelessWidget {
-  const ManagePatientView({
+class ManagePatientScreen extends StatelessWidget {
+  const ManagePatientScreen({
     super.key,
   });
 

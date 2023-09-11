@@ -20,7 +20,7 @@ class Api {
       );
 
       return resp.data;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       Param.showToast('Error en el POST: $e');
     }
     return null;
@@ -29,7 +29,8 @@ class Api {
   static Future post(String path, Map<String, dynamic> data) async {
     try {
       return await _dio.post(path, data: data);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
+      print('Error en el POST: $e');
       Param.showToast('Error en el POST: $e');
     }
     return null;

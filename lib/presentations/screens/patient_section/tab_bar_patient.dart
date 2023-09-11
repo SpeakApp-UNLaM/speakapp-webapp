@@ -33,8 +33,8 @@ class _TabBarPatientState extends State<TabBarPatient>
   Widget build(BuildContext context) {
     return Flexible(
       child: Column(
-        children: <Widget>[
-          TabBar.secondary(
+        children: [
+          TabBar(
             overlayColor: const MaterialStatePropertyAll(Colors.transparent),
             controller: _tabController,
             tabs: const [

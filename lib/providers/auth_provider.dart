@@ -37,6 +37,7 @@ class AuthProvider with ChangeNotifier {
 
   void checkLoggedIn() {
     loggedIn = prefs.getBool('LoggedIn') ?? false;
+    loggedIn = true;
   }
 
   Status _loggedInStatus = Status.NotLoggedIn;
@@ -54,7 +55,6 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     Response response = await Api.post(Param.postLogin, data);
-
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = response.data;
 
