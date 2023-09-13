@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class TextPrimary extends StatelessWidget {
   final String text;
-
-  const TextPrimary({super.key, required this.text});
+  final Color color;
+  const TextPrimary({super.key, required this.text, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +12,6 @@ class TextPrimary extends StatelessWidget {
         style: TextStyle(
             fontFamily: 'IkkaRounded',
             fontSize: 20,
-            color: Theme.of(context).primaryColorDark));
+            color: color));
   }
 }

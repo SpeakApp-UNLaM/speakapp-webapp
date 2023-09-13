@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ListLateral extends StatelessWidget {
   const ListLateral({
@@ -12,8 +13,8 @@ class ListLateral extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-              "Seleccione un fonema para habiltiar o\n Deshabilitar los ejercicios"),
+          Text(
+              "Seleccione un fonema para habilitar o\ndeshabilitar los ejercicios", style: GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(
             height: 20,
           ),

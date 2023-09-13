@@ -15,13 +15,18 @@ class Api {
 
   static Future get(String path) async {
     try {
-      final resp = await _dio.get(
-        path,
-      );
 
-      return resp.data;
+/*
+      if (authToken != null) {
+        _dio.options.headers['Authorization'] =
+          authToken; // Agre
+      }*/
+
+      final resp = await _dio.get(path);
+
+      return resp;
     } on DioException catch (e) {
-      Param.showToast('Error en el POST: $e');
+      Param.showToast('Error en el GET: $e');
     }
     return null;
   }

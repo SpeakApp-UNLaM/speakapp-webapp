@@ -16,13 +16,6 @@ class BlockPhoneme extends StatelessWidget {
           runSpacing: 50,
           children: [
             ButtonPhoneme(),
-            ButtonPhoneme(),
-            ButtonPhoneme(),
-            ButtonPhoneme(),
-            ButtonPhoneme(),
-            ButtonPhoneme(),
-            ButtonPhoneme(),
-            ButtonPhoneme(),
           ],
         ),
       ),

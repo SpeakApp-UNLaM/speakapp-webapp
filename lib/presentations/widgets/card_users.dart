@@ -1,13 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:speak_app_web/config/api.dart';
+import 'package:speak_app_web/config/param.dart';
 
 import '../../config/theme/app_theme.dart';
 
-class CardUser extends StatelessWidget {
+class CardUser extends StatefulWidget {
   const CardUser({
     super.key,
   });
+
+  @override
+  CardUserState createState() => CardUserState();
+}
+
+class CardUserState extends State<CardUser> with TickerProviderStateMixin {
+  final List<Object> _pagesExercisesFounded = [];
+  bool _dataLoaded = false;
+  Future? _fetchData;
+
+  Future fetchData() async {
+    if (!_dataLoaded) {
+      final response = await Api.get(Param.getPatients);
+
+      return response;
+
+      // Establece _dataLoaded en true después de cargar los datos
+    }
+
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData = fetchData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

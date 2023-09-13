@@ -37,27 +37,30 @@ class _TabBarPatientState extends State<TabBarPatient>
           TabBar(
             overlayColor: const MaterialStatePropertyAll(Colors.transparent),
             controller: _tabController,
-            tabs: const [
+            tabs: [
               Tab(
                   child: TextPrimary(
                 text: 'Gestionar ejercicios',
-              )),
+                color: Theme.of(context).primaryColorDark)
+              ),
               Tab(
                   child: TextPrimary(
                 text: 'Resultados de ejercicios',
-              )),
+                color: Theme.of(context).primaryColorDark)
+              ),
               Tab(
                   child: TextPrimary(
                 text: 'Resultados TEST RFI',
-              )),
+                 color: Theme.of(context).primaryColorDark)
+              ),
               Tab(
                   child: TextPrimary(
-                text: 'Datos del paciente',
-              )),
+                      text: 'Datos del paciente',
+                      color: Theme.of(context).primaryColorDark)),
               Tab(
                   child: TextPrimary(
-                text: 'Informes de sesiones',
-              )),
+                      text: 'Pacientes',
+                      color: Theme.of(context).primaryColorDark)),
             ],
           ),
           Expanded(
