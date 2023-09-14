@@ -16,11 +16,6 @@ class Api {
   static Future get(String path) async {
     try {
 
-/*
-      if (authToken != null) {
-        _dio.options.headers['Authorization'] =
-          authToken; // Agre
-      }*/
 
       final resp = await _dio.get(path);
 

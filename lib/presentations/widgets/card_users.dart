@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
+import 'package:speak_app_web/models/patient_model.dart';
 
 import '../../config/theme/app_theme.dart';
 
@@ -16,20 +17,17 @@ class CardUser extends StatefulWidget {
 }
 
 class CardUserState extends State<CardUser> with TickerProviderStateMixin {
-  final List<Object> _pagesExercisesFounded = [];
-  bool _dataLoaded = false;
+  final List<PatientModel> _patientsList = [];
   Future? _fetchData;
 
   Future fetchData() async {
-    if (!_dataLoaded) {
-      final response = await Api.get(Param.getPatients);
+    final response = await Api.get(Param.getPatients);
 
-      return response;
-
-      // Establece _dataLoaded en true después de cargar los datos
+    for (var element in response.data) {
+      _patientsList.add(PatientModel.fromJson(element));
     }
 
-    return null;
+    return response;
   }
 
   @override
@@ -84,44 +82,54 @@ class CardUserState extends State<CardUser> with TickerProviderStateMixin {
               ),
             ),
             const SizedBox(height: 10.0),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: 55,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Expanded(
-                      child: ListTile(
-                        title: Text(
-                          "Robertito $index",
-                          style: GoogleFonts.nunito(
-                              textStyle: TextStyle(
-                                  color: Colors.grey.shade700,
-                                  fontWeight: FontWeight.w600)),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: FilledButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                colorList[4], // Cambia el color de fondo aquí
-                          ),
-                          onPressed: () {
-                            context.go("/patient_screen");
-                          },
-                          child: const Text(
-                            "Ingresar",
-                            style: TextStyle(
-                              fontFamily: 'IkkaRounded',
-                            ),
-                          )),
-                    ),
-                  ],
-                );
-              },
-            ),
+            FutureBuilder(
+                future: _fetchData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _patientsList.length,
+                        itemBuilder: (context, index) {
+                          return Row(
+                            children: [
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(
+                                    _patientsList[index].firstName +
+                                        ' ' + _patientsList[index].lastName,                                   
+                                    style: GoogleFonts.nunito(
+                                        textStyle: TextStyle(
+                                            color: Colors.grey.shade700,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: FilledButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: colorList[
+                                          4], // Cambia el color de fondo aquí
+                                    ),
+                                    onPressed: () {
+                                      context.go("/patient_screen");
+                                    },
+                                    child: const Text(
+                                      "Ingresar",
+                                      style: TextStyle(
+                                        fontFamily: 'IkkaRounded',
+                                      ),
+                                    )),
+                              ),
+                            ],
+                          );
+                        });
+                  }
+                })
           ],
         ),
       ),

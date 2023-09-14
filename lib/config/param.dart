@@ -25,6 +25,7 @@ class Param {
   static const getPending = "/pending/1";
   static const getGroupExercises = "/groupExercises";
   static const getPatients = "/patients";
+  static const getPhonemes = "/phonemes";
   static const modelWhisper = "whisper-1";
   static const postLogin = "/auth/signin";
   static const tamImages = 120.0;

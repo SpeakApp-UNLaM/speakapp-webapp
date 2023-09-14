@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import '../../config/theme/app_theme.dart';
 
 class ButtonPhoneme extends StatelessWidget {
+  final int idPhoneme;
+  final String namePhoneme;
+
   const ButtonPhoneme({
+    required this.idPhoneme,
+    required this.namePhoneme,
     super.key,
   });
 
@@ -44,9 +49,16 @@ class ButtonPhoneme extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("R",
+                  Text(namePhoneme.replaceAll("CONSONANTICA", "").trim(),
                       style: TextStyle(
                         fontSize: 36,
+                        color: colorList[2],
+                        fontFamily: 'IkkaRounded',
+                      )),
+                  if (namePhoneme.length > 3)
+                  Text("Consonántica",
+                      style: TextStyle(
+                        fontSize: 12,
                         color: colorList[2],
                         fontFamily: 'IkkaRounded',
                       ))
