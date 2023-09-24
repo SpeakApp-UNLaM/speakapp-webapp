@@ -4,8 +4,10 @@ import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/presentations/widgets/button_phoneme.dart';
 
 class BlockPhoneme extends StatefulWidget {
+  final int idPatient;
   const BlockPhoneme({
     Key? key,
+    required this.idPatient
   }) : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class BlockPhonemeState extends State<BlockPhoneme>
 
     for (var element in response.data) {
       _buttonList.add(ButtonPhoneme(
+        idPatient: widget.idPatient,
         idPhoneme: element["idPhoneme"],
         namePhoneme: element["namePhoneme"],
       ));

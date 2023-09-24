@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../config/theme/app_theme.dart';
 
 class ButtonPhoneme extends StatelessWidget {
   final int idPhoneme;
   final String namePhoneme;
+  final int idPatient;
 
   const ButtonPhoneme({
+    required this.idPatient,
     required this.idPhoneme,
     required this.namePhoneme,
     super.key,
@@ -43,7 +46,8 @@ class ButtonPhoneme extends StatelessWidget {
               ),
             ),
             child: FloatingActionButton(
-              onPressed: () {},
+              heroTag: idPhoneme.toString(),
+              onPressed: () {context.goNamed("manage_phoneme_exercises", pathParameters: {'idPatient': idPatient.toString(), 'idPhoneme': idPhoneme.toString()});},
               backgroundColor: colorList[0],
               elevation: 10.0,
               child: Column(

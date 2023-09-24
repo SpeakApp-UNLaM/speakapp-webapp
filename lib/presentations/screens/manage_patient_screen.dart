@@ -28,7 +28,7 @@ class ManagePatientScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          const TabBarPatient(),
+          //const TabBarPatient(),
         ],
       ),
     );

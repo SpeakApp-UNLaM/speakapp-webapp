@@ -116,7 +116,8 @@ class CardUserState extends State<CardUser> with TickerProviderStateMixin {
                                           4], // Cambia el color de fondo aquí
                                     ),
                                     onPressed: () {
-                                      context.go("/patient_screen");
+                                      //TODO GET PATIENT ID
+                                      context.goNamed("manage_exercises", pathParameters: {'idPatient': _patientsList[index].idPatient.toString()});
                                     },
                                     child: const Text(
                                       "Ingresar",

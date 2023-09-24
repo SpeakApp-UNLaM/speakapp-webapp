@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/text_primary.dart';
 import 'exercises_results.dart';
 import 'manage_exercises.dart';
@@ -7,7 +8,9 @@ import 'rfi_results.dart';
 import 'session_reports.dart';
 
 class TabBarPatient extends StatefulWidget {
-  const TabBarPatient({super.key});
+  final Widget child;
+  final int idPatient;
+  const TabBarPatient({super.key, required this.child, required this.idPatient});
 
   @override
   State<TabBarPatient> createState() => _TabBarPatientState();
@@ -31,28 +34,35 @@ class _TabBarPatientState extends State<TabBarPatient>
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Column(
+    return  Column(
         children: [
           TabBar(
             overlayColor: const MaterialStatePropertyAll(Colors.transparent),
             controller: _tabController,
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                 context.goNamed('manage_exercises', pathParameters: {'idPatient': widget.idPatient.toString()});
+                  break;
+                case 1:
+                 context.goNamed('exercises_result', pathParameters: {'idPatient': widget.idPatient.toString()});
+                  break;
+                // Agrega casos para las otras pestañas...
+              }
+            },
             tabs: [
               Tab(
                   child: TextPrimary(
-                text: 'Gestionar ejercicios',
-                color: Theme.of(context).primaryColorDark)
-              ),
+                      text: 'Gestionar ejercicios',
+                      color: Theme.of(context).primaryColorDark)),
               Tab(
                   child: TextPrimary(
-                text: 'Resultados de ejercicios',
-                color: Theme.of(context).primaryColorDark)
-              ),
+                      text: 'Resultados de ejercicios',
+                      color: Theme.of(context).primaryColorDark)),
               Tab(
                   child: TextPrimary(
-                text: 'Resultados TEST RFI',
-                 color: Theme.of(context).primaryColorDark)
-              ),
+                      text: 'Resultados TEST RFI',
+                      color: Theme.of(context).primaryColorDark)),
               Tab(
                   child: TextPrimary(
                       text: 'Datos del paciente',
@@ -64,19 +74,9 @@ class _TabBarPatientState extends State<TabBarPatient>
             ],
           ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: const [
-                ManageExercises(),
-                ExercisesResults(),
-                RFIResults(),
-                PatientInfo(),
-                SessionReports(),
-              ],
-            ),
+            child: widget.child
           ),
         ],
-      ),
-    );
+      );
   }
 }
