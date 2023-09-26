@@ -90,45 +90,90 @@ class CardUserState extends State<CardUser> with TickerProviderStateMixin {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _patientsList.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: ListTile(
-                                  title: Text(
-                                    _patientsList[index].firstName +
-                                        ' ' + _patientsList[index].lastName,                                   
-                                    style: GoogleFonts.nunito(
-                                        textStyle: TextStyle(
-                                            color: Colors.grey.shade700,
-                                            fontWeight: FontWeight.w600)),
+                    return SingleChildScrollView(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height - 400,
+                        child: DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Nombre')),
+                            DataColumn(label: Text('Apellido')),
+                            DataColumn(label: Text('Edad')),
+                            DataColumn(label: Text('Email')),
+                            DataColumn(label: Text('')),
+                          ],
+                          rows: _patientsList.map((patient) {
+                            return DataRow(cells: [
+                              DataCell(
+                                Text(
+                                  '${patient.firstName}',
+                                  style: GoogleFonts.nunito(
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: FilledButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: colorList[
-                                          4], // Cambia el color de fondo aquí
+                              DataCell(
+                                Text(
+                                  '${patient.lastName}',
+                                  style: GoogleFonts.nunito(
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    onPressed: () {
-                                      //TODO GET PATIENT ID
-                                      context.goNamed("manage_exercises", pathParameters: {'idPatient': _patientsList[index].idPatient.toString()});
-                                    },
-                                    child: const Text(
-                                      "Ingresar",
-                                      style: TextStyle(
-                                        fontFamily: 'IkkaRounded',
-                                      ),
-                                    )),
+                                  ),
+                                ),
                               ),
-                            ],
-                          );
-                        });
+                              DataCell(
+                                Text(
+                                  '${patient.age}',
+                                  style: GoogleFonts.nunito(
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Text(
+                                  '${patient.email}',
+                                  style: GoogleFonts.nunito(
+                                    textStyle: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                FilledButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: colorList[4],
+                                  ),
+                                  onPressed: () {
+                                    // TODO: GET PATIENT ID
+                                    context.goNamed("manage_exercises",
+                                        pathParameters: {
+                                          'idPatient':
+                                              patient.idPatient.toString(),
+                                        });
+                                  },
+                                  child: const Text(
+                                    "Ingresar",
+                                    style: TextStyle(
+                                      fontFamily: 'IkkaRounded',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ]);
+                          }).toList(),
+                        ),
+                      ),
+                    );
                   }
                 })
           ],

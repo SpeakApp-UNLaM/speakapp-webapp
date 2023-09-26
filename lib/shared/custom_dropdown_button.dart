@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomDropdownButton extends StatelessWidget {
   final String? label;
@@ -22,38 +23,32 @@ class CustomDropdownButton extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     final border = OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.transparent),
+        borderSide: const BorderSide(color: Colors.white),
         borderRadius: BorderRadius.circular(40));
 
     const borderRadius = Radius.circular(15);
 
     return Container(
       // padding: const EdgeInsets.only(bottom: 0, top: 15),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.only(
               topLeft: borderRadius,
               bottomLeft: borderRadius,
               bottomRight: borderRadius),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 10,
-                offset: const Offset(0, 5))
-          ]),
+          ),
       child: DropdownButtonFormField<String>(
         items: options?.map((String option) {
           return DropdownMenuItem<String>(
             value: option,
-            child: Text(option),
+            child: Text(option, style: GoogleFonts.nunito(fontSize: 16, color: Colors.black54 )),
           );
         }).toList(),
         value: value,
         onChanged: onChanged,
-        style: const TextStyle(fontSize: 20, color: Colors.black54),
+        style: GoogleFonts.nunito(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.bold ),
         decoration: InputDecoration(
-          floatingLabelStyle: const TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+          floatingLabelStyle: GoogleFonts.nunito(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.w900 ),
           enabledBorder: border,
           focusedBorder: border,
           errorBorder: border.copyWith(
@@ -61,7 +56,7 @@ class CustomDropdownButton extends StatelessWidget {
           focusedErrorBorder: border.copyWith(
               borderSide: BorderSide(color: Colors.red.shade800)),
           isDense: true,
-          label: label != null ? Text(label!) : null,
+          label: label != null ? Text(label!, style: GoogleFonts.nunito(fontSize: 16, color: Colors.black54 ),) : null,
           hintText: hint,
           errorText: errorMessage,
           focusColor: colors.primary,

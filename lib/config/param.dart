@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:speak_app_web/config/theme/app_theme.dart';
 
 enum TypeExercise {
   speak,
@@ -22,12 +23,15 @@ class Param {
   static const getCareers = "/careers";
   static const getExercises = "/tasks/items";
   static const getTasks = "/tasks/";
+  static const getTasksByPhoneme = "/tasks/change-url";
   static const getPending = "/pending/1";
   static const getGroupExercises = "/groupExercises";
   static const getPatients = "/patients";
   static const getPhonemes = "/phonemes";
   static const modelWhisper = "whisper-1";
   static const postLogin = "/auth/signin";
+  static const postTasks = "/tasks";
+
   static const tamImages = 120.0;
 
   static void showToast(String response) {
@@ -42,6 +46,17 @@ class Param {
     );
   }
 
+  static void showSuccessToast(String msg) {
+    Fluttertoast.showToast(
+      msg: msg, // Mensaje de la excepción
+      toastLength: Toast
+          .LENGTH_LONG, // Duración del toast (Toast.LENGTH_LONG o Toast.LENGTH_SHORT)
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: colorList[4], // Color de fondo del toast
+      textColor: Colors.white, // Color del texto del toast
+    );
+  }
+
   static TypeExercise stringToEnumTypeExercise(String value) =>
       TypeExercise.values
           .firstWhere((element) => element.toString() == 'TypeExercise.$value');
@@ -51,6 +66,15 @@ class Param {
     Categories.word: "Palabra",
     Categories.phrase: "Frases"
   };
+  
+  static Categories getCategoryFromDescription(String description) {
+  for (var entry in categoriesDescriptions.entries) {
+    if (entry.value == description) {
+      return entry.key;
+    }
+  }
+  return Categories.syllable; // Devolver null si no se encuentra ninguna coincidencia.
+}
 
   static Categories stringToEnumCategories(String value) => Categories.values
       .firstWhere((element) => element.toString() == 'Categories.$value');

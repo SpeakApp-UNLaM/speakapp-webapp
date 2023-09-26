@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:speak_app_web/presentations/screens/calendar_section/calendar_view.dart';
@@ -96,6 +98,7 @@ class AppRouter {
                                         idPhoneme:
                                             state.pathParameters['idPhoneme']
                                                 as String,
+                                        namePhoneme: (state.extra as String)
                                       ),
                                       transitionsBuilder: (context, animation,
                                           secondaryAnimation, child) {

@@ -2,19 +2,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
 import 'package:speak_app_web/domain/entities/task.dart';
 import 'package:speak_app_web/models/patient_model.dart';
 import 'package:speak_app_web/models/task_model.dart';
+import 'package:speak_app_web/providers/exercise_provider.dart';
 import 'package:speak_app_web/shared/custom_dropdown_button.dart';
 
 class ManagePhonemeExercises extends StatefulWidget {
   final int idPatient;
   final String idPhoneme;
+  final String namePhoneme;
   const ManagePhonemeExercises(
-      {super.key, required this.idPatient, required this.idPhoneme});
+      {super.key, required this.idPatient, required this.idPhoneme, required this.namePhoneme});
 
   @override
   ManagePhonemeExercisesState createState() => ManagePhonemeExercisesState();
@@ -23,12 +26,13 @@ class ManagePhonemeExercises extends StatefulWidget {
 class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
     with TickerProviderStateMixin {
   Future<List<Task>>? _fetchData;
-
   Future<List<Task>> fetchData() async {
-    final response = await Api.get("${Param.getTasks}/1");
+    final response = await Api.get(
+        "${Param.getTasksByPhoneme}/${widget.idPatient}/${widget.idPhoneme}");
     List<Task> lst = [];
-    for (var element in response.data) {
-      lst.add(TaskModel.fromJson(element).toTaskEntity());
+
+    if (response.data.length != 0) {
+      lst.add(TaskModel.fromJson(response.data).toTaskEntity());
     }
 
     return lst;
@@ -37,6 +41,8 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
   @override
   void initState() {
     super.initState();
+    context.read<ExerciseProvider>().refreshData();
+    context.read<ExerciseProvider>().setPhonemeId = int.parse(widget.idPhoneme);
     _fetchData = fetchData();
   }
 
@@ -45,11 +51,23 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
     super.dispose();
   }
 
-  void _openDialog() {
+  void _openDialogAddExercise() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AddExerciseDialog(); // Replace MyDialogWidget with your custom dialog content
+        return AddExerciseDialog(
+          idPatient: widget.idPatient,
+          namePhoneme: widget.namePhoneme,
+        ); // Replace MyDialogWidget with your custom dialog content
+      },
+    );
+  }
+
+  void _openDialogRemoveExercise(int idTask) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RemoveExerciseDialog(idTask: idTask,); // Replace MyDialogWidget with your custom dialog content
       },
     );
   }
@@ -71,6 +89,17 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
             elevation: 6,
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(36.0),
+                  child: Text(
+                    "Listado de Ejercicios Asignados - Fonema: ${widget.namePhoneme}",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontFamily: 'IkkaRounded',
+                        fontSize: 18),
+                  ),
+                ),
+                Divider(),
                 Padding(
                   padding: const EdgeInsets.all(36.0),
                   child: FutureBuilder<List<Task>>(
@@ -114,7 +143,10 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                           backgroundColor: Colors
                                               .redAccent, // Cambia el color de fondo aquí
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          int idTask = snapshot.data?[0].categories[index].idTask as int;
+                                          _openDialogRemoveExercise(idTask);
+                                        },
                                         child: const Text(
                                           "Eliminar",
                                           style: TextStyle(
@@ -139,7 +171,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: FloatingActionButton(
-              onPressed: _openDialog,
+              onPressed: _openDialogAddExercise,
               backgroundColor: colorList[4],
               child: const Icon(
                 Icons.add,
@@ -153,7 +185,76 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
   }
 }
 
+class RemoveExerciseDialog extends StatelessWidget {
+  final int idTask;
+  RemoveExerciseDialog({super.key, required this.idTask});
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: Text(
+        'Eliminar Ejercicio',
+        style: TextStyle(
+            fontFamily: 'IkkaRounded',
+            fontSize: 24,
+            color: Theme.of(context).primaryColor),
+      ),
+      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      content: Builder(builder: (context) {
+        var height = MediaQuery.of(context).size.height;
+        var width = MediaQuery.of(context).size.width;
+
+        return Container(
+          height: height - 800,
+          width: width - 1300,
+          child: const Column(
+            children: [
+            
+              Text(
+                  "Si confirmas la acción, el ejercicio asignado quedará eliminado permanentemente"),
+            ],
+          ),
+        );
+      }),
+      actions: [
+        TextButton(
+          onPressed: () {
+            context.read<ExerciseProvider>().removeExercise(idTask);
+            Navigator.of(context).pop();
+            Param.showSuccessToast(
+                "Ejercicio eliminado con éxito"); // Close the dialog
+          },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return Colors.redAccent.shade100;
+                }
+                return null; // Use the component's default.
+              },
+            ),
+          ),
+          child: Text(
+            'Eliminar',
+            style: TextStyle(color: Colors.redAccent),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text('Cancelar'),
+        ),
+      ],
+    );
+  }
+}
+
 class AddExerciseDialog extends StatelessWidget {
+  final int idPatient;
+  final String namePhoneme;
+
+  AddExerciseDialog({super.key, required this.idPatient, required this.namePhoneme});
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -171,8 +272,8 @@ class AddExerciseDialog extends StatelessWidget {
         var width = MediaQuery.of(context).size.width;
 
         return Container(
-          height: height - 400,
-          width: width - 800,
+          height: height - 550,
+          width: width - 1200,
           child: Column(
             children: [
               const SizedBox(
@@ -180,24 +281,31 @@ class AddExerciseDialog extends StatelessWidget {
                 width: 500,
               ),
               CustomDropdownButton(
-                options: const ['R'],
+                options: [namePhoneme],
                 label: 'Fonéma',
                 onChanged: null,
                 errorMessage: null,
-                value: 'R',
+                value: namePhoneme,
               ),
               const SizedBox(height: 30),
               CustomDropdownButton(
                 options: const ['Nivel 1', 'Nivel 2', 'Nivel 3'],
                 label: 'Nivel',
-                onChanged: (value) => print(value),
+                onChanged: (value) {
+                  context.read<ExerciseProvider>().setLevel = int.parse(
+                      (value as String).replaceAll(RegExp(r'[^0-9]'), ''));
+                },
                 errorMessage: null,
               ),
               const SizedBox(height: 30),
               CustomDropdownButton(
                 options: const ['Silabas', 'Palabras', 'Frases'],
                 label: 'Categoria',
-                onChanged: (value) => print(value),
+                onChanged: (value) {
+                  context.read<ExerciseProvider>().setCategories = [
+                    Param.getCategoryFromDescription(value as String)
+                  ];
+                },
                 errorMessage: null,
               ),
             ],
@@ -207,7 +315,10 @@ class AddExerciseDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
+            context.read<ExerciseProvider>().sendExercise(idPatient);
+            Navigator.of(context).pop();
+            Param.showSuccessToast(
+                "Ejercicio Agregado con éxito"); // Close the dialog
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color?>(

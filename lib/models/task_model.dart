@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'package:speak_app_web/domain/entities/category.dart';
-import 'package:speak_app_web/domain/entities/task.dart';
-
 import 'phoneme_model.dart';
 import 'category_model.dart';
+import '../domain/entities/task.dart';
+import '../domain/entities/category.dart';
 
 List<TaskModel> taskModelFromJson(String str) =>
     List<TaskModel>.from(json.decode(str).map((x) => TaskModel.fromJson(x)));

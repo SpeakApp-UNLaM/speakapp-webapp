@@ -47,7 +47,12 @@ class ButtonPhoneme extends StatelessWidget {
             ),
             child: FloatingActionButton(
               heroTag: idPhoneme.toString(),
-              onPressed: () {context.goNamed("manage_phoneme_exercises", pathParameters: {'idPatient': idPatient.toString(), 'idPhoneme': idPhoneme.toString()});},
+              onPressed: () {
+                context.goNamed("manage_phoneme_exercises", pathParameters: {
+                  'idPatient': idPatient.toString(),
+                  'idPhoneme': idPhoneme.toString(),
+                }, extra: namePhoneme);
+              },
               backgroundColor: colorList[0],
               elevation: 10.0,
               child: Column(
@@ -60,12 +65,12 @@ class ButtonPhoneme extends StatelessWidget {
                         fontFamily: 'IkkaRounded',
                       )),
                   if (namePhoneme.length > 3)
-                  Text("Consonántica",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colorList[2],
-                        fontFamily: 'IkkaRounded',
-                      ))
+                    Text("Consonántica",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorList[2],
+                          fontFamily: 'IkkaRounded',
+                        ))
                 ],
               ),
             ),

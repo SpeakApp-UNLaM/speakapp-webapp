@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speak_app_web/providers/exercise_provider.dart';
 import 'config/api.dart';
 import 'config/routers/app_router.dart';
 import 'config/theme/app_theme.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
           lazy: false,
           create: (BuildContext createContext) => AppRouter(),
         ),
+        ChangeNotifierProvider(create: (_) => ExerciseProvider()),
       ],
       child: Builder(
         builder: (BuildContext context) {

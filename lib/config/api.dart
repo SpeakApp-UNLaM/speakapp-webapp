@@ -47,11 +47,9 @@ class Api {
     }
   }
 
-  static Future delete(String path, Map<String, dynamic> data) async {
-    final formData = FormData.fromMap(data);
-
+  static Future delete(String path) async {
     try {
-      final resp = await _dio.delete(path, data: formData);
+      final resp = await _dio.delete(path);
       return resp.data;
     } catch (e) {
       throw ('Error en el delete');

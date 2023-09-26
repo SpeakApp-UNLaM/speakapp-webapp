@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Wrap(spacing: 50, children: [
               TextButton.icon(
-                  onPressed: () => {context.go('/')},
+                  onPressed: () => {context.go('/patients')},
                   icon: const Icon(Icons.supervised_user_circle,
                       color: Colors.white),
                   label: const TextPrimary(
