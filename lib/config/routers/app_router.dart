@@ -94,11 +94,12 @@ class AppRouter {
                                     return CustomTransitionPage(
                                       key: state.pageKey,
                                       child: ManagePhonemeExercises(
-                                        idPatient: int.parse(state.pathParameters['idPatient'] as String),
+                                        idPatient: int.parse(
+                                            state.pathParameters['idPatient']
+                                                as String),
                                         idPhoneme:
                                             state.pathParameters['idPhoneme']
                                                 as String,
-                                        namePhoneme: (state.extra as String)
                                       ),
                                       transitionsBuilder: (context, animation,
                                           secondaryAnimation, child) {

@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
+import 'package:speak_app_web/domain/entities/phoneme.dart';
 import 'package:speak_app_web/domain/entities/task.dart';
 import 'package:speak_app_web/models/patient_model.dart';
+import 'package:speak_app_web/models/phoneme_model.dart';
 import 'package:speak_app_web/models/task_model.dart';
 import 'package:speak_app_web/providers/exercise_provider.dart';
 import 'package:speak_app_web/shared/custom_dropdown_button.dart';
@@ -15,9 +17,11 @@ import 'package:speak_app_web/shared/custom_dropdown_button.dart';
 class ManagePhonemeExercises extends StatefulWidget {
   final int idPatient;
   final String idPhoneme;
-  final String namePhoneme;
-  const ManagePhonemeExercises(
-      {super.key, required this.idPatient, required this.idPhoneme, required this.namePhoneme});
+  const ManagePhonemeExercises({
+    super.key,
+    required this.idPatient,
+    required this.idPhoneme,
+  });
 
   @override
   ManagePhonemeExercisesState createState() => ManagePhonemeExercisesState();
@@ -26,9 +30,19 @@ class ManagePhonemeExercises extends StatefulWidget {
 class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
     with TickerProviderStateMixin {
   Future<List<Task>>? _fetchData;
+  late Phoneme phonemeData;
   Future<List<Task>> fetchData() async {
+    // obtenemos phoneme
+    final responsePhoneme = await Api.get("${Param.getPhonemes}/${widget.idPhoneme}");
+
+    if (responsePhoneme.data.length != 0) {
+      Task task = TaskModel.fromJson(responsePhoneme.data).toTaskEntity();
+      phonemeData = task.phoneme;
+    }
+
     final response = await Api.get(
         "${Param.getTasksByPhoneme}/${widget.idPatient}/${widget.idPhoneme}");
+
     List<Task> lst = [];
 
     if (response.data.length != 0) {
@@ -57,7 +71,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
       builder: (BuildContext context) {
         return AddExerciseDialog(
           idPatient: widget.idPatient,
-          namePhoneme: widget.namePhoneme,
+          namePhoneme: phonemeData.namePhoneme,
         ); // Replace MyDialogWidget with your custom dialog content
       },
     );
@@ -67,7 +81,9 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return RemoveExerciseDialog(idTask: idTask,); // Replace MyDialogWidget with your custom dialog content
+        return RemoveExerciseDialog(
+          idTask: idTask,
+        ); // Replace MyDialogWidget with your custom dialog content
       },
     );
   }
@@ -91,17 +107,6 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
               children: [
                 Padding(
                   padding: const EdgeInsets.all(36.0),
-                  child: Text(
-                    "Listado de Ejercicios Asignados - Fonema: ${widget.namePhoneme}",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontFamily: 'IkkaRounded',
-                        fontSize: 18),
-                  ),
-                ),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(36.0),
                   child: FutureBuilder<List<Task>>(
                     future: _fetchData,
                     builder: (context, snapshot) {
@@ -112,21 +117,31 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                       } else {
                         return Column(
                           children: [
-                            ListView.separated(
-                              shrinkWrap: true,
-                              itemCount:
-                                  snapshot.data?[0].categories.length as int,
-                              separatorBuilder: ((context, index) => Divider()),
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  children: [
-                                    Expanded(
-                                      child: ListTile(
-                                        title: Text(
-                                          Param.categoriesDescriptions[snapshot
-                                              .data?[0]
-                                              .categories[index]
-                                              .category] as String,
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                "Listado de Ejercicios Asignados - Fonema: ${phonemeData.namePhoneme}",
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontFamily: 'IkkaRounded',
+                                    fontSize: 18),
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('Categoria')),
+                                    DataColumn(label: Text('Nivel')),
+                                    DataColumn(label: Text('')),
+                                  ],
+                                  rows: snapshot.data![0].categories.map((ex) {
+                                    return DataRow(cells: [
+                                      DataCell(
+                                        Text(
+                                          Param.categoriesDescriptions[
+                                              ex.category] as String,
                                           style: GoogleFonts.nunito(
                                             textStyle: TextStyle(
                                               color: Colors.grey.shade700,
@@ -135,30 +150,43 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: FilledButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors
-                                              .redAccent, // Cambia el color de fondo aquí
-                                        ),
-                                        onPressed: () {
-                                          int idTask = snapshot.data?[0].categories[index].idTask as int;
-                                          _openDialogRemoveExercise(idTask);
-                                        },
-                                        child: const Text(
-                                          "Eliminar",
-                                          style: TextStyle(
-                                            fontFamily: 'IkkaRounded',
+                                      DataCell(
+                                        Text(
+                                          'Nivel 1',
+                                          style: GoogleFonts.nunito(
+                                            textStyle: TextStyle(
+                                              color: Colors.grey.shade700,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                                      DataCell(
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: FilledButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors
+                                                  .redAccent, // Cambia el color de fondo aquí
+                                            ),
+                                            onPressed: () {
+                                              _openDialogRemoveExercise(
+                                                  ex.idTask as int);
+                                            },
+                                            child: const Text(
+                                              "Eliminar",
+                                              style: TextStyle(
+                                                fontFamily: 'IkkaRounded',
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ]);
+                                  }).toList(),
+                                ),
+                              ),
+                            )
                           ],
                         );
                       }
@@ -209,7 +237,6 @@ class RemoveExerciseDialog extends StatelessWidget {
           width: width - 1300,
           child: const Column(
             children: [
-            
               Text(
                   "Si confirmas la acción, el ejercicio asignado quedará eliminado permanentemente"),
             ],
@@ -254,7 +281,8 @@ class AddExerciseDialog extends StatelessWidget {
   final int idPatient;
   final String namePhoneme;
 
-  AddExerciseDialog({super.key, required this.idPatient, required this.namePhoneme});
+  AddExerciseDialog(
+      {super.key, required this.idPatient, required this.namePhoneme});
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -318,7 +346,7 @@ class AddExerciseDialog extends StatelessWidget {
             context.read<ExerciseProvider>().sendExercise(idPatient);
             Navigator.of(context).pop();
             Param.showSuccessToast(
-                "Ejercicio Agregado con éxito"); // Close the dialog
+                "Ejercicio Agregado con éxito");          
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color?>(

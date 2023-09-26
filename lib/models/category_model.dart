@@ -3,7 +3,7 @@ import 'package:speak_app_web/config/param.dart';
 import '../domain/entities/category.dart';
 
 class CategoryModel {
-  int idTask;
+  int? idTask;
   Categories category;
   int level;
 
@@ -25,5 +25,5 @@ class CategoryModel {
         "level": level,
       };
 
-  Category toCategoryEntity() => Category(category: category, level: level, idTask: idTask);
+  Category toCategoryEntity() => Category(category: category, level: level, idTask: idTask ?? 0);
 }
