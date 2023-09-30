@@ -46,8 +46,8 @@ class AppRouter {
                       // Change the opacity of the screen using a Curve based on the the animation's
                       // value
                       return FadeTransition(
-                        opacity: CurveTween(curve: Curves.fastOutSlowIn)
-                            .animate(animation),
+                        opacity: CurvedAnimation(
+                            curve: Curves.elasticIn, parent: animation),
                         child: child,
                       );
                     },
@@ -56,11 +56,22 @@ class AppRouter {
                 routes: [
                   ShellRoute(
                       navigatorKey: _shellTabNavigator,
-                      builder: (context, state, child) {
-                        return TabBarPatient(
-                            idPatient: int.parse(
-                                state.pathParameters['idPatient'] as String),
-                            child: child);
+                      pageBuilder: (context, state, child) {
+                        return CustomTransitionPage(
+                          key: state.pageKey,
+                          child: TabBarPatient(
+                              idPatient: int.parse(
+                                  state.pathParameters['idPatient'] as String),
+                              child: child),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(
+                              opacity: CurvedAnimation(
+                                  curve: Curves.elasticIn, parent: animation),
+                              child: child,
+                            );
+                          },
+                        );
                       },
                       routes: [
                         GoRoute(

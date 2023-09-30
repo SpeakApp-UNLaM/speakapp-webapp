@@ -39,29 +39,19 @@ class ExerciseProvider extends ChangeNotifier {
     data = ExerciseData(phonemeId: 0, level: null, categories: []);
   }
 
-  Future<void> sendExercise(int idPatient) async {
+  Future<Response> sendExercise(int idPatient) async {
     print(data.toJson());
     Response response =
         await Api.post("${Param.postTasks}/$idPatient", data.toJson());
 
     refreshData();
 
-    if (response.statusCode == 200) {
-      print("TODO OK, ${response.statusMessage}");
-    } else {
-      print("TODO MAL, ${response.statusMessage}");
-    }
+    return response;
   }
 
-  Future<void> removeExercise(int idTask) async {
-    print(data.toJson());
-    Response response =
-        await Api.delete("${Param.postTasks}/$idTask");
+  Future<Response> removeExercise(int idTask) async {
+    Response response = await Api.delete("${Param.postTasks}/$idTask");
 
-    if (response.statusCode == 200) {
-      print("TODO OK, ${response.statusMessage}");
-    } else {
-      print("TODO MAL, ${response.statusMessage}");
-    }
+    return response;
   }
 }

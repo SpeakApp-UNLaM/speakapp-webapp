@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
@@ -33,7 +35,8 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
   late Phoneme phonemeData;
   Future<List<Task>> fetchData() async {
     // obtenemos phoneme
-    final responsePhoneme = await Api.get("${Param.getPhonemes}/${widget.idPhoneme}");
+    final responsePhoneme =
+        await Api.get("${Param.getPhonemes}/${widget.idPhoneme}");
 
     if (responsePhoneme.data.length != 0) {
       Task task = TaskModel.fromJson(responsePhoneme.data).toTaskEntity();
@@ -65,8 +68,8 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
     super.dispose();
   }
 
-  void _openDialogAddExercise() {
-    showDialog(
+  void _openDialogAddExercise() async {
+    final result = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AddExerciseDialog(
@@ -75,10 +78,32 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
         ); // Replace MyDialogWidget with your custom dialog content
       },
     );
+
+    if (result != null) {
+      await _addExercise(widget.idPatient).then((value) {
+        showToast(
+          " Ejercicio agregado exitosamente",
+          textPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+          position: ToastPosition.bottom,
+          backgroundColor: Colors.greenAccent.shade700,
+          radius: 8.0,
+          textStyle: GoogleFonts.nunito(fontSize: 16.0, color: Colors.white),
+          duration: const Duration(seconds: 5),
+        );
+
+        context.read<ExerciseProvider>().setPhonemeId =
+            int.parse(widget.idPhoneme);
+        setState(() {
+          _fetchData = fetchData();
+        });
+      },
+          onError: (error) =>
+              Param.showSuccessToast("Error al agregar ejercicio $error"));
+    }
   }
 
-  void _openDialogRemoveExercise(int idTask) {
-    showDialog(
+  void _openDialogRemoveExercise(int idTask) async {
+    final result = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return RemoveExerciseDialog(
@@ -86,11 +111,26 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
         ); // Replace MyDialogWidget with your custom dialog content
       },
     );
+
+    if (result != null) {
+      setState(() {
+        _fetchData = fetchData();
+      });
+    }
+  }
+
+  Future<Response> _addExercise(idPatient) async {
+    final result =
+        await context.read<ExerciseProvider>().sendExercise(idPatient);
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final levels = ['Inicial', 'Intermedio', 'Final'];
+
+    return OKToast(
+        child: Container(
       width: MediaQuery.of(context)
           .size
           .width, // Ocupa todo el ancho de la pantalla
@@ -113,7 +153,10 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                                child: Text('Error: ${snapshot.error}')));
                       } else {
                         return Column(
                           children: [
@@ -152,7 +195,8 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                       ),
                                       DataCell(
                                         Text(
-                                          'Nivel 1',
+                                          levels[
+                                              ex.level != 0 ? ex.level - 1 : 1],
                                           style: GoogleFonts.nunito(
                                             textStyle: TextStyle(
                                               color: Colors.grey.shade700,
@@ -209,7 +253,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
           )
         ],
       ),
-    );
+    ));
   }
 }
 
@@ -218,6 +262,12 @@ class RemoveExerciseDialog extends StatelessWidget {
   RemoveExerciseDialog({super.key, required this.idTask});
   @override
   Widget build(BuildContext context) {
+    Future<Response> _removeExercise(int idTask) async {
+      final result =
+          await context.read<ExerciseProvider>().removeExercise(idTask);
+      return result;
+    }
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
@@ -227,7 +277,7 @@ class RemoveExerciseDialog extends StatelessWidget {
             fontSize: 24,
             color: Theme.of(context).primaryColor),
       ),
-      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      contentPadding: const EdgeInsets.symmetric(vertical: 20),
       content: Builder(builder: (context) {
         var height = MediaQuery.of(context).size.height;
         var width = MediaQuery.of(context).size.width;
@@ -245,11 +295,19 @@ class RemoveExerciseDialog extends StatelessWidget {
       }),
       actions: [
         TextButton(
-          onPressed: () {
-            context.read<ExerciseProvider>().removeExercise(idTask);
-            Navigator.of(context).pop();
-            Param.showSuccessToast(
-                "Ejercicio eliminado con éxito"); // Close the dialog
+          onPressed: () async {
+            await _removeExercise(idTask);
+            Navigator.of(context).pop(true);
+            showToast(
+              "Ejercicio eliminado con éxito",
+              textPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              position: ToastPosition.bottom,
+              backgroundColor: Colors.greenAccent.shade700,
+              radius: 8.0,
+              textStyle:
+                  GoogleFonts.nunito(fontSize: 16.0, color: Colors.white),
+              duration: const Duration(seconds: 5),
+            );
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color?>(
@@ -285,6 +343,7 @@ class AddExerciseDialog extends StatelessWidget {
       {super.key, required this.idPatient, required this.namePhoneme});
   @override
   Widget build(BuildContext context) {
+    final levels = ['Inicial', 'Intermedio', 'Final'];
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
@@ -317,11 +376,11 @@ class AddExerciseDialog extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               CustomDropdownButton(
-                options: const ['Nivel 1', 'Nivel 2', 'Nivel 3'],
+                options: const ['Inicial', 'Intermedio', 'Final'],
                 label: 'Nivel',
                 onChanged: (value) {
-                  context.read<ExerciseProvider>().setLevel = int.parse(
-                      (value as String).replaceAll(RegExp(r'[^0-9]'), ''));
+                  context.read<ExerciseProvider>().setLevel =
+                      levels.indexOf(value as String) + 1;
                 },
                 errorMessage: null,
               ),
@@ -342,11 +401,8 @@ class AddExerciseDialog extends StatelessWidget {
       }),
       actions: [
         TextButton(
-          onPressed: () {
-            context.read<ExerciseProvider>().sendExercise(idPatient);
-            Navigator.of(context).pop();
-            Param.showSuccessToast(
-                "Ejercicio Agregado con éxito");          
+          onPressed: () async {
+            Navigator.of(context).pop(true);
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color?>(

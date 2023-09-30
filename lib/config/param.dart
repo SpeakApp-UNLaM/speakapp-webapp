@@ -42,7 +42,8 @@ class Param {
       gravity: ToastGravity
           .CENTER, // Posición del toast (ToastGravity.TOP, ToastGravity.CENTER, ToastGravity.BOTTOM)
       backgroundColor: Colors.red, // Color de fondo del toast
-      textColor: Colors.white, // Color del texto del toast
+      textColor: Colors.white,
+      timeInSecForIosWeb: 5 // Color del texto del toast
     );
   }
 
@@ -53,7 +54,11 @@ class Param {
           .LENGTH_LONG, // Duración del toast (Toast.LENGTH_LONG o Toast.LENGTH_SHORT)
       gravity: ToastGravity.BOTTOM,
       backgroundColor: colorList[4], // Color de fondo del toast
-      textColor: Colors.white, // Color del texto del toast
+      textColor: Colors.white,
+      timeInSecForIosWeb: 3,// Color del texto del toast
+      fontSize: 18,
+      webPosition: "center",
+      webBgColor: "linear-gradient(#72bb53)"
     );
   }
 
@@ -63,7 +68,7 @@ class Param {
 
   static Map<Categories, String> categoriesDescriptions = {
     Categories.syllable: "Silaba",
-    Categories.word: "Palabra",
+    Categories.word: "Palabras",
     Categories.phrase: "Frases"
   };
   

@@ -50,7 +50,7 @@ class Api {
   static Future delete(String path) async {
     try {
       final resp = await _dio.delete(path);
-      return resp.data;
+      return resp;
     } catch (e) {
       throw ('Error en el delete');
     }
