@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../config/theme/app_theme.dart';
 
@@ -66,10 +67,10 @@ class ButtonPhoneme extends StatelessWidget {
                       )),
                   if (namePhoneme.length > 3)
                     Text("Consonántica",
-                        style: TextStyle(
+                        style: GoogleFonts.nunito(
                           fontSize: 12,
                           color: colorList[2],
-                          fontFamily: 'IkkaRounded',
+                          fontWeight: FontWeight.w700
                         ))
                 ],
               ),

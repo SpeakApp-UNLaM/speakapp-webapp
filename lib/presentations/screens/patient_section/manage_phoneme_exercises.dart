@@ -244,7 +244,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
             padding: const EdgeInsets.all(16.0),
             child: FloatingActionButton(
               onPressed: _openDialogAddExercise,
-              backgroundColor: colorList[4],
+              backgroundColor: Theme.of(context).primaryColor,
               child: const Icon(
                 Icons.add,
                 color: Colors.white,
@@ -300,7 +300,8 @@ class RemoveExerciseDialog extends StatelessWidget {
             Navigator.of(context).pop(true);
             showToast(
               "Ejercicio eliminado con éxito",
-              textPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              textPadding:
+                  const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               position: ToastPosition.bottom,
               backgroundColor: Colors.greenAccent.shade700,
               radius: 8.0,
