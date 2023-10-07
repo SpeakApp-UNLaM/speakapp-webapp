@@ -64,128 +64,142 @@ class _TabBarPatientState extends State<TabBarPatient>
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Container(
-                        width: 400,
-                        child: Card(
-                          child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 30),
+                          width: 400,
+                          child: Card(
+                            elevation: 5, // Agregar sombra al card
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
                                     "Datos del paciente",
                                     style: TextStyle(
-                                        color:
-                                            Theme.of(context).primaryColor,
-                                        fontSize: 22,
-                                        fontFamily: 'IkkaRounded'),
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 22,
+                                      fontFamily: 'IkkaRounded',
+                                      fontWeight: FontWeight
+                                          .bold, // Hacer el título en negrita
+                                    ),
                                   ),
-                                  const SizedBox(height: 50),
+                                  const SizedBox(height: 20),
                                   CircleAvatar(
-                                    minRadius: 50,
-                                    backgroundColor: Colors
-                                        .transparent, // Establecer el fondo transparente
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          "https://img.freepik.com/foto-gratis/nino-sonriente-aislado-rosa_23-2148984798.jpg?w=1380&t=st=1696089946~exp=1696090546~hmac=4035c3677d316811640bb086080f9a56d805c927a829156891b8bcfe83f28a28",
-                                          width: 100, // Ancho de la imagen
-                                          height: 100, // Alto de la imagen
-                                          fit: BoxFit
-                                              .cover, // Ajusta la imagen al círculo
-                                        ),
+                                    radius: 60, // Reducir el tamaño del avatar
+                                    backgroundColor: Colors.transparent,
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        "https://img.freepik.com/foto-gratis/nino-sonriente-aislado-rosa_23-2148984798.jpg?w=1380&t=st=1696089946~exp=1696090546~hmac=4035c3677d316811640bb086080f9a56d805c927a829156891b8bcfe83f28a28",
+                                        width: 120,
+                                        height: 120,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 20),
                                   Text(
-                                    "${patient.lastName} ${patient.firstName} ",
+                                    "${patient.lastName} ${patient.firstName}",
                                     style: TextStyle(
-                                        color:
-                                            Theme.of(context).primaryColor,
-                                        fontSize: 16,
-                                        fontFamily: 'IkkaRounded'),
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize:
+                                          18, // Aumentar el tamaño de la fuente del nombre
+                                      fontFamily: 'IkkaRounded',
+                                      fontWeight: FontWeight
+                                          .bold, // Hacer el nombre en negrita
+                                    ),
                                   ),
                                   const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        "Sexo: Masculino ",
-                                        style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700),
+                                  Card(
+                                    surfaceTintColor: Colors.white,
+                                    elevation: 3, // Agregar sombra al sub-card
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Text(
+                                            "Información del paciente",
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontSize: 16,
+                                              fontFamily: 'IkkaRounded',
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Sexo: Masculino",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight
+                                                      .w500, // Reducir el peso de la fuente
+                                                ),
+                                              ),
+                                              Text(
+                                                "Edad: ${patient.age}",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Email: ${patient.email}",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                "Sesiones: 15",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            "Fecha Alta: 12/08/2023",
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(width: 20),
-                                      Text(
-                                        "Edad: ${patient.age}",
-                                        style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        "Email: ${patient.email} ",
-                                        style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Text(
-                                        "Sesiones: 15 ",
-                                        style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        "Email: ${patient.email} ",
-                                        style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Text(
-                                        "Sesiones: 15 ",
-                                        style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ],
-                                  )
                                 ],
-                              )),
-                        ),
-                      ),
+                              ),
+                            ),
+                          )),
                     )),
                 Expanded(
                     child: DefaultTabController(
-                  length: 5,
+                  length: 4,
                   child: Column(children: [
                     TabBar(
                       overlayColor:
@@ -223,11 +237,7 @@ class _TabBarPatientState extends State<TabBarPatient>
                                 color: Theme.of(context).primaryColor)),
                         Tab(
                             child: TextPrimary(
-                                text: 'Datos del paciente',
-                                color: Theme.of(context).primaryColor)),
-                        Tab(
-                            child: TextPrimary(
-                                text: 'Pacientes',
+                                text: 'Informes',
                                 color: Theme.of(context).primaryColor)),
                       ],
                     ),

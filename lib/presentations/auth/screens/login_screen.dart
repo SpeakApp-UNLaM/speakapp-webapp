@@ -29,6 +29,7 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 80),
             // Icon Banner
             Image(
+              fit: BoxFit.cover,
               image: AssetImage('assets/branding/Logo_SpeakApp.png'),
               width: 220,
               height: 100,
@@ -61,11 +62,11 @@ class _LoginForm extends StatelessWidget {
     final loginProv = context.watch<LoginProvider>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 600),
       child: Column(
         children: [
           const SizedBox(height: 50),
-          Text('Login',
+          Text('Bienvenido',
               style: GoogleFonts.nunito(
                   textStyle: TextStyle(
                       fontSize: 30,
@@ -92,7 +93,7 @@ class _LoginForm extends StatelessWidget {
               width: double.infinity,
               height: 60,
               child: CustomFilledButton(
-                text: 'Ingresar',
+                text: 'INGRESAR',
                 buttonColor: colorList[0],
                 onPressed: () {
                   context.read<LoginProvider>().onFormSubmit(context);
@@ -105,7 +106,13 @@ class _LoginForm extends StatelessWidget {
               const Text('¿No tienes cuenta?'),
               TextButton(
                   onPressed: () => context.push('/register'),
-                  child: const Text('Crea una aquí'))
+                  child: Text(
+                    'Crea una aquí',
+                    style: GoogleFonts.nunito(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900),
+                  ))
             ],
           ),
           const Spacer(flex: 1),

@@ -2,12 +2,16 @@ import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:speak_app_web/presentations/auth/screens/login_screen.dart';
+import 'package:speak_app_web/presentations/auth/screens/register_screen.dart';
 import 'package:speak_app_web/presentations/screens/calendar_section/calendar_view.dart';
 import 'package:speak_app_web/presentations/screens/manage_patient_screen.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/exercises_results.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/manage_exercises.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/manage_phoneme_exercises.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/tab_bar_patient.dart';
+import 'package:speak_app_web/providers/auth_provider.dart';
 
 import '../../presentations/screens/home_screen.dart';
 import '../../presentations/screens/message_section/message_view.dart';
@@ -15,7 +19,9 @@ import '../../presentations/screens/patient_section/patient_view.dart';
 
 // GoRouter configuration
 class AppRouter {
-  AppRouter();
+  final AuthProvider authProvider;
+
+  AppRouter(this.authProvider);
   final GlobalKey<NavigatorState> _rootNavigatorKey =
       GlobalKey<NavigatorState>();
   final GlobalKey<NavigatorState> _shellNavigator =
@@ -26,7 +32,24 @@ class AppRouter {
   late final router = GoRouter(
     initialLocation: '/patients',
     navigatorKey: _rootNavigatorKey,
+    refreshListenable: authProvider,
     routes: [
+      GoRoute(
+        name: 'LoginScreen',
+        path: '/login',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: const LoginScreen(),
+        ),
+      ),
+      GoRoute(
+        name: 'RegisterScreen',
+        path: '/register',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: const RegisterScreen(),
+        ),
+      ),
       ShellRoute(
           navigatorKey: _shellNavigator,
           builder: (context, state, child) {
@@ -186,5 +209,18 @@ class AppRouter {
             )
           ])
     ],
+    redirect: (context, state) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final loginLoc = state.pageKey;
+      final loggingIn = state.matchedLocation == loginLoc;
+
+      //final createAccountLoc = state.namedLocation(createAccountRouteName);
+      //final creatingAccount = state.subloc == createAccountLoc;
+      final loggedIn = authProvider.loggedIn;
+      //final rootLoc = state.namedLocation(rootRouteName);
+
+      if (!loggedIn) return '/login';
+      return null;
+    },
   );
 }

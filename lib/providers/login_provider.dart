@@ -50,7 +50,7 @@ class LoginProvider extends ChangeNotifier {
     AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
 
     auth.login(email.value, password.value).then((value) => {
-          if (auth.loggedInStatus == Status.LoggedIn) {context.go('/')} else {}
+          if (auth.loggedInStatus == Status.LoggedIn) {context.go('/patients')} else {}
         });
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
+import 'package:speak_app_web/providers/login_provider.dart';
 
 import '../widgets/text_primary.dart';
 
@@ -12,6 +14,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _openDialogShowProfessionalCode() async {
+      final result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ShowCodeDialog(); // Replace MyDialogWidget with your custom dialog content
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -37,9 +48,9 @@ class HomeScreen extends StatelessWidget {
                   label: const TextPrimary(
                       text: 'Calendario', color: Colors.white)),
               ElevatedButton(
-                  onPressed: () => {},
+                  onPressed: () => _openDialogShowProfessionalCode(),
                   child: TextPrimary(
-                      text: 'Generar codigo',
+                      text: 'Mostrar codigo',
                       color: Theme.of(context).primaryColor)),
               Padding(
                 padding: const EdgeInsets.only(right: 20.0),
@@ -48,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                     onSelected: (SampleItem item) {
                       switch (item) {
                         case SampleItem.logOut:
-                        //context.read<LoginProvider>().onLogOut(context);
+                        context.read<LoginProvider>().onLogOut(context);
                         default:
                           return;
                       }
@@ -87,6 +98,46 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: child,
+    );
+  }
+}
+
+class ShowCodeDialog extends StatelessWidget {
+  ShowCodeDialog({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+
+      contentPadding: const EdgeInsets.symmetric(vertical: 20),
+      content: Builder(builder: (context) {
+        var height = MediaQuery.of(context).size.height;
+        var width = MediaQuery.of(context).size.width;
+
+        return Container(
+          height: height - 800,
+          width: width - 1500,
+          child: Center(
+            child: 
+              SelectableText(
+                'A2BBH2991ASKKK',
+                style: TextStyle(
+                    fontFamily: 'IkkaRounded',
+                    fontSize: 24,
+                    color: Theme.of(context).primaryColor),
+              ),
+            
+          ),
+        );
+      }),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text('Cerrar'),
+        ),
+      ],
     );
   }
 }
