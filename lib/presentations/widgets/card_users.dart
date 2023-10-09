@@ -50,8 +50,8 @@ class CardUserState extends State<CardUser> with TickerProviderStateMixin {
       margin: const EdgeInsets.all(30.0),
       child: Card(
         color: Theme.of(context).cardColor,
+        elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        elevation: 6,
         child: Column(
           children: [
             Container(

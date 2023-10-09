@@ -60,11 +60,11 @@ class ButtonPhoneme extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(namePhoneme.replaceAll("CONSONANTICA", "").trim(),
-                      style: TextStyle(
-                        fontSize: 36,
-                        color: colorList[2],
-                        fontFamily: 'IkkaRounded',
-                      )),
+                      style: GoogleFonts.nunito(
+                          fontSize: 36,
+                          color: colorList[2],
+                          fontWeight: FontWeight.w900
+                        )),
                   if (namePhoneme.length > 3)
                     Text("Consonántica",
                         style: GoogleFonts.nunito(

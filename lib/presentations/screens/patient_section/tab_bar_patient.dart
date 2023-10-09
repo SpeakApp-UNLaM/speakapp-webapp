@@ -38,7 +38,7 @@ class _TabBarPatientState extends State<TabBarPatient>
   void initState() {
     super.initState();
     _fetchData = fetchData();
-    _tabController = TabController(initialIndex: 0, length: 5, vsync: this);
+    _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
   }
 
   @override
@@ -68,7 +68,7 @@ class _TabBarPatientState extends State<TabBarPatient>
                           child: Card(
                             elevation: 5, // Agregar sombra al card
                             child: Padding(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -82,7 +82,7 @@ class _TabBarPatientState extends State<TabBarPatient>
                                           .bold, // Hacer el título en negrita
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 50),
                                   CircleAvatar(
                                     radius: 60, // Reducir el tamaño del avatar
                                     backgroundColor: Colors.transparent,
@@ -109,7 +109,8 @@ class _TabBarPatientState extends State<TabBarPatient>
                                   ),
                                   const SizedBox(height: 20),
                                   Card(
-                                    surfaceTintColor: Colors.white,
+                                    surfaceTintColor: Theme.of(context)
+                                        .scaffoldBackgroundColor,
                                     elevation: 3, // Agregar sombra al sub-card
                                     child: Padding(
                                       padding: const EdgeInsets.all(16),
@@ -179,6 +180,31 @@ class _TabBarPatientState extends State<TabBarPatient>
                                             ],
                                           ),
                                           const SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Tel: 1131984311",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                "DNI: 47888233",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
                                           Text(
                                             "Fecha Alta: 12/08/2023",
                                             style: TextStyle(
@@ -198,51 +224,54 @@ class _TabBarPatientState extends State<TabBarPatient>
                           )),
                     )),
                 Expanded(
-                    child: DefaultTabController(
-                  length: 4,
-                  child: Column(children: [
-                    TabBar(
-                      overlayColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      controller: _tabController,
-                      onTap: (index) {
-                        switch (index) {
-                          case 0:
-                            context.goNamed('manage_exercises',
-                                pathParameters: {
-                                  'idPatient': widget.idPatient.toString()
-                                });
-                            break;
-                          case 1:
-                            context.goNamed('exercises_result',
-                                pathParameters: {
-                                  'idPatient': widget.idPatient.toString()
-                                });
-                            break;
-                          // Agrega casos para las otras pestañas...
-                        }
-                      },
-                      tabs: [
-                        Tab(
-                            child: TextPrimary(
-                                text: 'Gestionar ejercicios',
-                                color: Theme.of(context).primaryColor)),
-                        Tab(
-                            child: TextPrimary(
-                                text: 'Resultados de ejercicios',
-                                color: Theme.of(context).primaryColor)),
-                        Tab(
-                            child: TextPrimary(
-                                text: 'Resultados TEST RFI',
-                                color: Theme.of(context).primaryColor)),
-                        Tab(
-                            child: TextPrimary(
-                                text: 'Informes',
-                                color: Theme.of(context).primaryColor)),
-                      ],
-                    ),
-                    Expanded(child: widget.child),
-                  ]),
+                    child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 40),
+                  child: DefaultTabController(
+                    length: 4,
+                    child: Column(children: [
+                      TabBar(
+                        overlayColor:
+                            const MaterialStatePropertyAll(Colors.transparent),
+                        controller: _tabController,
+                        onTap: (index) {
+                          switch (index) {
+                            case 0:
+                              context.goNamed('manage_exercises',
+                                  pathParameters: {
+                                    'idPatient': widget.idPatient.toString()
+                                  });
+                              break;
+                            case 1:
+                              context.goNamed('exercises_result',
+                                  pathParameters: {
+                                    'idPatient': widget.idPatient.toString()
+                                  });
+                              break;
+                            // Agrega casos para las otras pestañas...
+                          }
+                        },
+                        tabs: [
+                          Tab(
+                              child: Text(
+                                  'Gestionar Practicas',
+                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800))),
+                          Tab(
+                              child: Text(
+                                  'Resultados de Practicas',
+                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800))),
+                          Tab(
+                              child: Text(
+                                  'Resultados de TEST RFI',
+                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800))),
+                          Tab(
+                              child: Text(
+                                  'Informes',
+                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800), )),
+                        ],
+                      ),
+                      Expanded(child: widget.child),
+                    ]),
+                  ),
                 )),
               ],
             );

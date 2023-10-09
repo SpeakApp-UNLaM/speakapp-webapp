@@ -60,6 +60,8 @@ class HomeScreen extends StatelessWidget {
                       switch (item) {
                         case SampleItem.logOut:
                         context.read<LoginProvider>().onLogOut(context);
+                        case SampleItem.config:
+                        context.go('/user_settings');
                         default:
                           return;
                       }

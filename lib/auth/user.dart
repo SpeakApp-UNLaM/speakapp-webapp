@@ -1,6 +1,9 @@
 class User {
   int userId;
   String username;
+  String firstName;
+  String lastName;
+
   String email;
   String phone;
   String type;
@@ -10,6 +13,8 @@ class User {
   User(
       {required this.userId,
       required this.username,
+      required this.firstName,
+      required this.lastName,
       required this.email,
       required this.phone,
       required this.type,
@@ -20,6 +25,8 @@ class User {
     return User(
         userId: responseData['id'],
         username: responseData['username'],
+        firstName: responseData['firstName'],
+        lastName: responseData['lastName'],
         email: responseData['email'],
         phone: responseData['phone'],
         type: responseData['type'],

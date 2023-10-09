@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'user.dart';
+import 'package:speak_app_web/auth/user.dart';
 
 class UserPreferences {
   Future<bool> saveUser(User user) async {
@@ -8,6 +7,8 @@ class UserPreferences {
 
     prefs.setInt("userId", user.userId);
     prefs.setString("username", user.username);
+    prefs.setString("firstName", user.firstName);
+    prefs.setString("lastName", user.lastName);
     prefs.setString("email", user.email);
     prefs.setString("phone", user.phone);
     prefs.setString("type", user.type);
@@ -22,6 +23,8 @@ class UserPreferences {
 
     int userId = prefs.getInt("userId") as int;
     String username = prefs.getString("username") as String;
+    String firstName = prefs.getString("firstName") as String;
+    String lastName = prefs.getString("lastName") as String;
     String email = prefs.getString("email") as String;
     String phone = prefs.getString("phone") as String;
     String type = prefs.getString("type") as String;
@@ -31,6 +34,8 @@ class UserPreferences {
     return User(
         userId: userId,
         username: username,
+        firstName: firstName,
+        lastName: lastName,
         email: email,
         phone: phone,
         type: type,
@@ -46,6 +51,8 @@ class UserPreferences {
     prefs.remove("phone");
     prefs.remove("type");
     prefs.remove("token");
+
+    prefs.clear();
   }
 
   Future<String> getToken(args) async {

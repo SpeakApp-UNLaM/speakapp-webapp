@@ -44,6 +44,8 @@ dependencies:
   formz: ^0.6.0
   flutter_tts: ^3.8.2
   oktoast: ^3.3.2
+  percent_indicator: ^4.0.1
+
 
 dev_dependencies:
   flutter_test:

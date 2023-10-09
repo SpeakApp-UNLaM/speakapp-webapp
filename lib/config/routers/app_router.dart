@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:speak_app_web/presentations/auth/screens/login_screen.dart';
 import 'package:speak_app_web/presentations/auth/screens/register_screen.dart';
+import 'package:speak_app_web/presentations/config/user_config.dart';
 import 'package:speak_app_web/presentations/screens/calendar_section/calendar_view.dart';
 import 'package:speak_app_web/presentations/screens/manage_patient_screen.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/exercises_results.dart';
@@ -154,7 +155,8 @@ class AppRouter {
                           pageBuilder: (context, state) {
                             return CustomTransitionPage(
                               key: state.pageKey,
-                              child: const ExercisesResults(),
+                              child: ExercisesResults(idPatient: int.parse(
+                                  state.pathParameters['idPatient'] as String)),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
                                 return FadeTransition(
@@ -169,6 +171,25 @@ class AppRouter {
                         ),
                       ])
                 ]),
+            GoRoute(
+              path: '/user_settings',
+              pageBuilder: (context, state) {
+                return CustomTransitionPage(
+                  key: state.pageKey,
+                  child: const UserConfigScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    // Change the opacity of the screen using a Curve based on the the animation's
+                    // value
+                    return FadeTransition(
+                      opacity: CurveTween(curve: Curves.fastOutSlowIn)
+                          .animate(animation),
+                      child: child,
+                    );
+                  },
+                );
+              },
+            ),
             GoRoute(
               path: '/message_view',
               pageBuilder: (context, state) {

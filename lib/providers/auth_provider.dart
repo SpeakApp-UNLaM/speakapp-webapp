@@ -62,9 +62,11 @@ class AuthProvider with ChangeNotifier {
       loggedIn = true;
       //User authUser = User.fromJson(userData);
       User authUser = User(
-          userId: 1,
-          username: 'professional',
-          email: 'professional',
+          firstName: responseData['firstName'],
+          lastName: responseData['lastName'],
+          userId: responseData['idUser'],
+          username: responseData['username'],
+          email: responseData['email'],
           phone: '11311984311',
           type: 'professional',
           token: token,

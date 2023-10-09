@@ -71,6 +71,16 @@ class Param {
     Categories.word: "Palabras",
     Categories.phrase: "Frases"
   };
+
+   static Map<TypeExercise, String> typeExercisesDescription = {
+    TypeExercise.speak: "Hablar",
+    TypeExercise.order_syllable: "Ordenar Sílabas",
+    TypeExercise.consonantal_syllable: "Sílaba Consonante",
+    TypeExercise.minimum_pairs_selection: "Selección Pares Mínimos",
+    TypeExercise.single_selection_syllable: "Selección de Sílaba",
+    TypeExercise.multiple_match_selection: "Selección Múltiple",
+    TypeExercise.single_selection_word: "Selección de Palabra",
+  };
   
   static Categories getCategoryFromDescription(String description) {
   for (var entry in categoriesDescriptions.entries) {
