@@ -7,6 +7,7 @@ import 'package:speak_app_web/config/theme/app_theme.dart';
 import 'package:speak_app_web/models/category_model.dart';
 import 'package:speak_app_web/models/exercise_model.dart';
 import 'package:speak_app_web/models/phoneme_model.dart';
+import 'package:speak_app_web/models/phoneme_task_resolved.dart';
 import 'package:speak_app_web/models/task_model.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/phoneme_exercises_results.dart';
 import 'package:speak_app_web/presentations/widgets/button_phoneme.dart';
@@ -22,59 +23,18 @@ class ListFinishedExercises extends StatefulWidget {
 
 class ListFinishedExercisesState extends State<ListFinishedExercises>
     with TickerProviderStateMixin {
-  final List<TaskModel> _finishedTasks = [];
+  final List<PhonemeTaskResolvedModel> _finishedTasks = [];
   Future? _fetchData;
 
   Future fetchData() async {
-    final response = await Api.get(Param.getPhonemes);
+    final response = await Api.get("${Param.getResolvedExercises}/${widget.idPatient}" );
 
     for (var element in response.data) {
-      _finishedTasks.add(TaskModel(
-          phonemeModel: PhonemeModel(idPhoneme: 1, namePhoneme: 'R'),
-          categoriesModel: [
-            CategoryModel(
-                idTask: 1,
-                category: Categories.syllable,
-                level: 1,
-                exercisesResult: [
-                  ExerciseModel(
-                      idTaskItem: 1,
-                      type: TypeExercise.order_syllable,
-                      result: 'SUCCESS',
-                      images: []),
-                  ExerciseModel(
-                      idTaskItem: 2,
-                      type: TypeExercise.speak,
-                      result: 'ERROR',
-                      images: []),
-                  ExerciseModel(
-                      idTaskItem: 3,
-                      type: TypeExercise.minimum_pairs_selection,
-                      result: 'SUCCESS',
-                      images: [])
-                ]),
-                CategoryModel(
-                idTask: 1,
-                category: Categories.syllable,
-                level: 1,
-                exercisesResult: [
-                  ExerciseModel(
-                      idTaskItem: 1,
-                      type: TypeExercise.order_syllable,
-                      result: 'SUCCESS',
-                      images: []),
-                  ExerciseModel(
-                      idTaskItem: 2,
-                      type: TypeExercise.speak,
-                      result: 'SUCCESS',
-                      images: []),
-                  ExerciseModel(
-                      idTaskItem: 3,
-                      type: TypeExercise.speak,
-                      result: 'SUCCESS',
-                      images: [])
-                ])
-          ]));
+      _finishedTasks.add(PhonemeTaskResolvedModel(
+        idPhoneme: element["idPhoneme"],
+        namePhoneme: element["namePhoneme"],
+      ));
+
     }
 
     return response;
@@ -123,14 +83,14 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
                       DataCell(Container(
                         // Espaciado vertical
                         child: ButtonStaticPhoneme(
-                          idPhoneme: task.phonemeModel.idPhoneme,
-                          namePhoneme: task.phonemeModel.namePhoneme,
+                          idPhoneme: task.idPhoneme,
+                          namePhoneme: task.namePhoneme,
                         ),
                       )),
                       DataCell(Container(
                         // Espaciado vertical
                         child: Text(
-                          task.categoriesModel.length.toString(),
+                          '1',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.nunito(
                               color: Theme.of(context).primaryColorDark,
@@ -148,11 +108,11 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
                                 context,
                                 MaterialPageRoute(
                                     maintainState: true,
-                                    builder: (context) =>
+                                    builder: (context) => 
                                         PhonemeExercisesResults(
-                                            exercises: task.categoriesModel,
-                                            namePhoneme: task
-                                                .phonemeModel.namePhoneme)));
+                                            idPatient: widget.idPatient,
+                                            idPhoneme: task
+                                                .idPhoneme)));
                           },
                           child: const Text(
                             "Ingresar",

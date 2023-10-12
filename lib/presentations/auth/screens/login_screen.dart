@@ -105,7 +105,7 @@ class _LoginForm extends StatelessWidget {
             children: [
               const Text('¿No tienes cuenta?'),
               TextButton(
-                  onPressed: () => context.push('/register'),
+                  onPressed: () => context.go('/register'),
                   child: Text(
                     'Crea una aquí',
                     style: GoogleFonts.nunito(

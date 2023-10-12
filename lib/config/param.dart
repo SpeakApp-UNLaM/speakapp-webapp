@@ -28,6 +28,7 @@ class Param {
   static const getGroupExercises = "/groupExercises";
   static const getPatients = "/patients";
   static const getPhonemes = "/phonemes";
+  static const getResolvedExercises = "/resolve-exercises";
   static const modelWhisper = "whisper-1";
   static const postLogin = "/auth/signin";
   static const postTasks = "/tasks";
@@ -78,8 +79,9 @@ class Param {
     TypeExercise.consonantal_syllable: "Sílaba Consonante",
     TypeExercise.minimum_pairs_selection: "Selección Pares Mínimos",
     TypeExercise.single_selection_syllable: "Selección de Sílaba",
-    TypeExercise.multiple_match_selection: "Selección Múltiple",
+    TypeExercise.multiple_match_selection: "Ordenar Selección Múltiple",
     TypeExercise.single_selection_word: "Selección de Palabra",
+    TypeExercise.multiple_selection: "Selección Múltiple"
   };
   
   static Categories getCategoryFromDescription(String description) {

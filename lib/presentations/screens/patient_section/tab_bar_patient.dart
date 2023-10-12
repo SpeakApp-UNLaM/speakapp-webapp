@@ -120,12 +120,11 @@ class _TabBarPatientState extends State<TabBarPatient>
                                         children: [
                                           Text(
                                             "Información del paciente",
-                                            style: TextStyle(
+                                            style: GoogleFonts.nunito(
                                               color: Theme.of(context)
                                                   .primaryColor,
                                               fontSize: 16,
-                                              fontFamily: 'IkkaRounded',
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w800,
                                             ),
                                           ),
                                           const SizedBox(height: 10),
