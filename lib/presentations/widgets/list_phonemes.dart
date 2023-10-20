@@ -7,7 +7,7 @@ class BlockPhoneme extends StatefulWidget {
   final int idPatient;
   const BlockPhoneme({
     Key? key,
-    required this.idPatient
+    required this.idPatient,
   }) : super(key: key);
 
   @override
@@ -47,9 +47,13 @@ class BlockPhonemeState extends State<BlockPhoneme>
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final itemsPerRow = 6;
-    final spacing = (screenWidth - (itemsPerRow * 120)) /
-        (itemsPerRow - 1);
+    final itemWidth = 120.0; // Ancho de un elemento
+    final spacing = 20.0; // Espacio entre elementos
+
+    // Calcula la cantidad de elementos por fila basándose en el ancho de la pantalla
+    final itemsPerRow = (screenWidth / (itemWidth + spacing)).floor();
+    final horizontalSpacing =
+        (screenWidth - (itemsPerRow * itemWidth)) / (itemsPerRow - 1);
 
     return Expanded(
       child: SingleChildScrollView(
@@ -62,31 +66,11 @@ class BlockPhonemeState extends State<BlockPhoneme>
               return Text('Error: ${snapshot.error}');
             } else {
               return Wrap(
-                alignment: WrapAlignment.spaceEvenly,
+                alignment: WrapAlignment.start,
                 direction: Axis.horizontal,
-                spacing: spacing,
-                runSpacing: 20,
-                children: [
-                  for (var i = 0; i < _buttonList.length; i += itemsPerRow)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            for (var j = i;
-                                j < i + itemsPerRow && j < _buttonList.length;
-                                j++)
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: spacing / itemsPerRow),
-                                  child: _buttonList[j],
-                                )
-                              ,
-                          ],
-                        ),
-                      ],
-                    ),
-                ],
+                spacing: horizontalSpacing,
+                runSpacing: spacing,
+                children: _buttonList,
               );
             }
           },

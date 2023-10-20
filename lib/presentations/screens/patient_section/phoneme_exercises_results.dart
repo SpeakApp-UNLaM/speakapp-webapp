@@ -168,12 +168,11 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
                     future: _fetchTaskData,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Expanded(child: Center(child: CircularProgressIndicator()));
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
                         return Expanded(
-                            child: SingleChildScrollView(
                           child: Container(
                             width: double.infinity,
                             padding: EdgeInsets.only(top: 50),
@@ -190,11 +189,11 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
                                       animation: true,
                                       percent: _finishedTaskItems
                                               .where((element) =>
-                                                  element.result == 'success')
+                                                  element.result == 'SUCCESS')
                                               .length /
                                           _finishedTaskItems.length,
                                       center: Text(
-                                        "${(_finishedTaskItems.where((element) => element.result == 'success').length / _finishedTaskItems.length * 100).toString()}%",
+                                        "${(_finishedTaskItems.where((element) => element.result == 'SUCCESS').length / _finishedTaskItems.length * 100).toString()}%",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15.0,
@@ -225,11 +224,11 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
                                       animation: true,
                                       percent: _finishedTaskItems
                                               .where((element) =>
-                                                  element.result == 'failure')
+                                                  element.result == 'FAILURE')
                                               .length /
                                           _finishedTaskItems.length,
                                       center: Text(
-                                        "${(_finishedTaskItems.where((element) => element.result == 'failure').length / _finishedTaskItems.length * 100).toString()}%",
+                                        "${(_finishedTaskItems.where((element) => element.result == 'FAILURE').length / _finishedTaskItems.length * 100).toString()}%",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15.0,
@@ -254,70 +253,82 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
                                   ],
                                 ),
                                 SizedBox(height: 50),
-                                DataTable(
-                                  border: TableBorder(
-                                    horizontalInside: BorderSide(
-                                      width: 3,
-                                      style: BorderStyle.solid,
-                                      color: Colors.grey.shade200,
+                                Expanded(
+                                  child: SingleChildScrollView(child: DataTable(
+                                    border: TableBorder(
+                                      horizontalInside: BorderSide(
+                                        width: 3,
+                                        style: BorderStyle.solid,
+                                        color: Colors.grey.shade200,
+                                      ),
                                     ),
+                                    dataRowMinHeight: 60,
+                                    dataRowMaxHeight: 100,
+                                    columns: const [
+                                      DataColumn(label: Text('Ejercicios')),
+                                      DataColumn(label: Text('Tipo Ejercicio')),
+                                      DataColumn(label: Text('Resultado')),
+                                    ],
+                                    rows: _finishedTaskItems
+                                        .asMap()
+                                        .entries
+                                        .map((entry) {
+                                      final index = entry.key;
+                                      final task = entry.value;
+
+                                      return DataRow(cells: [
+                                        DataCell(Container(
+                                          // Espaciado vertical
+                                          child: Text(
+                                            'Ejercicio ${index + 1}', // Muestra el índice + 1
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.nunito(
+                                              color: Theme.of(context)
+                                                  .primaryColorDark,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        )),
+                                        DataCell(Container(
+                                          // Espaciado vertical
+                                          child: Text(
+                                            Param.typeExercisesDescription[
+                                                task.type] as String,
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.nunito(
+                                              color: Theme.of(context)
+                                                  .primaryColorDark,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        )),
+                                        DataCell(Container(
+                                          // Espaciado vertical
+                                          child: RawMaterialButton(
+                                            onPressed: () {},
+                                            elevation: 2.0,
+                                            fillColor: task.result == 'SUCCESS'
+                                                ? colorList[4]
+                                                : Colors.redAccent,
+                                            child: Icon(
+                                              task.result == 'SUCCESS'
+                                                  ? Icons.check
+                                                  : Icons.close,
+                                              size: 20.0,
+                                              color: Colors.white,
+                                            ),
+                                            padding: EdgeInsets.all(5.0),
+                                            shape: CircleBorder(),
+                                          ),
+                                        )),
+                                      ]);
+                                    }).toList(),
                                   ),
-                                  dataRowMinHeight: 60,
-                                  dataRowMaxHeight: 100,
-                                  columns: const [
-                                    DataColumn(label: Text('Ejercicios')),
-                                    DataColumn(label: Text('Tipo Ejercicio')),
-                                    DataColumn(label: Text('Resultado')),
-                                  ],
-                                  rows: (_finishedTaskItems).map((task) {
-                                    return DataRow(cells: [
-                                      DataCell(Container(
-                                        // Espaciado vertical
-                                        child: Text(
-                                          'Ejercicio 1',
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColorDark,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      )),
-                                      DataCell(Container(
-                                        // Espaciado vertical
-                                        child: Text(
-                                          Param.typeExercisesDescription[
-                                              task.type] as String,
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.nunito(
-                                            color: Theme.of(context)
-                                                .primaryColorDark,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      )),
-                                      DataCell(Container(
-                                        // Espaciado vertical
-                                        child: RawMaterialButton(
-                                          onPressed: () {},
-                                          elevation: 2.0,
-                                          fillColor: task.result == 'success' ? colorList[4] : Colors.redAccent,
-                                          child: Icon(
-                                            task.result == 'success' ? Icons.check : Icons.close,
-                                            size: 20.0,
-                                            color: Colors.white,
-                                          ),
-                                          padding: EdgeInsets.all(5.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                      )),
-                                    ]);
-                                  }).toList(),
-                                ),
+                                ))
                               ],
                             ),
                           ),
-                        ));
+                        );
                       }
                     })
               ],

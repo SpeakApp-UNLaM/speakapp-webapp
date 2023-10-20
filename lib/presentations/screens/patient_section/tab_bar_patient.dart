@@ -68,7 +68,8 @@ class _TabBarPatientState extends State<TabBarPatient>
                           child: Card(
                             elevation: 5, // Agregar sombra al card
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 60),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -246,26 +247,42 @@ class _TabBarPatientState extends State<TabBarPatient>
                                     'idPatient': widget.idPatient.toString()
                                   });
                               break;
+                            case 2:
+                              context.goNamed('rfi_result',
+                                  pathParameters: {
+                                    'idPatient': widget.idPatient.toString()
+                                  });
+                              break;
                             // Agrega casos para las otras pestañas...
                           }
                         },
                         tabs: [
                           Tab(
-                              child: Text(
-                                  'Gestionar Practicas',
-                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800))),
+                              child: Text('Gestionar Practicas',
+                                  style: GoogleFonts.nunito(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800))),
+                          Tab(
+                              child: Text('Resultados de Practicas',
+                                  style: GoogleFonts.nunito(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800))),
+                          Tab(
+                              child: Text('Resultados de TEST RFI',
+                                  style: GoogleFonts.nunito(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800))),
                           Tab(
                               child: Text(
-                                  'Resultados de Practicas',
-                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800))),
-                          Tab(
-                              child: Text(
-                                  'Resultados de TEST RFI',
-                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800))),
-                          Tab(
-                              child: Text(
-                                  'Informes',
-                                  style: GoogleFonts.nunito(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800), )),
+                            'Informes',
+                            style: GoogleFonts.nunito(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800),
+                          )),
                         ],
                       ),
                       Expanded(child: widget.child),

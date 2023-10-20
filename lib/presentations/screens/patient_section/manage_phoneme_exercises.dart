@@ -129,131 +129,176 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
   Widget build(BuildContext context) {
     final levels = ['Inicial', 'Intermedio', 'Final'];
 
-    return OKToast(
-        child: Container(
-      width: MediaQuery.of(context)
-          .size
-          .width, // Ocupa todo el ancho de la pantalla
-      margin: const EdgeInsets.symmetric(horizontal: 100, vertical: 30),
-      child: Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          Card(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            elevation: 6,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(36.0),
-                  child: FutureBuilder<List<Task>>(
-                    future: _fetchData,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                                child: Text('Error: ${snapshot.error}')));
-                      } else {
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(
-                                "Listado de Ejercicios Asignados - Fonema: ${phonemeData.namePhoneme}",
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontFamily: 'IkkaRounded',
-                                    fontSize: 18),
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: DataTable(
-                                  columns: const [
-                                    DataColumn(label: Text('Categoria')),
-                                    DataColumn(label: Text('Nivel')),
-                                    DataColumn(label: Text('')),
-                                  ],
-                                  rows: snapshot.data![0].categories.map((ex) {
-                                    return DataRow(cells: [
-                                      DataCell(
-                                        Text(
-                                          Param.categoriesDescriptions[
-                                              ex.category] as String,
-                                          style: GoogleFonts.nunito(
-                                            textStyle: TextStyle(
-                                              color: Colors.grey.shade700,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
+    return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 40,
+          shadowColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Theme.of(context).primaryColor,
+            onPressed: () {
+              Navigator.pop(context); // Cierra la página actual y vuelve atrás
+            },
+          ),
+        ),
+        body: OKToast(
+            child: Container(
+          width: MediaQuery.of(context)
+              .size
+              .width, // Ocupa todo el ancho de la pantalla
+          margin: const EdgeInsets.symmetric(horizontal: 100, vertical: 30),
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  Text(
+                    'Volver',
+                    style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Card(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    elevation: 6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(36.0),
+                          child: FutureBuilder<List<Task>>(
+                            future: _fetchData,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.7,
+                                    child: Center(
+                                        child: CircularProgressIndicator()));
+                              } else if (snapshot.hasError) {
+                                return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}')));
+                              } else {
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Text(
+                                        "Listado de Ejercicios Asignados - Fonema: ${phonemeData.namePhoneme}",
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontFamily: 'IkkaRounded',
+                                            fontSize: 18),
                                       ),
-                                      DataCell(
-                                        Text(
-                                          levels[
-                                              ex.level != 0 ? ex.level - 1 : 1],
-                                          style: GoogleFonts.nunito(
-                                            textStyle: TextStyle(
-                                              color: Colors.grey.shade700,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: FilledButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors
-                                                  .redAccent, // Cambia el color de fondo aquí
-                                            ),
-                                            onPressed: () {
-                                              _openDialogRemoveExercise(
-                                                  ex.idTask as int);
-                                            },
-                                            child: const Text(
-                                              "Eliminar",
-                                              style: TextStyle(
-                                                fontFamily: 'IkkaRounded',
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: DataTable(
+                                        columns: const [
+                                          DataColumn(label: Text('Categoria')),
+                                          DataColumn(label: Text('Nivel')),
+                                          DataColumn(label: Text('')),
+                                        ],
+                                        rows: snapshot.data![0].categories
+                                            .map((ex) {
+                                          return DataRow(cells: [
+                                            DataCell(
+                                              Text(
+                                                Param.categoriesDescriptions[
+                                                    ex.category] as String,
+                                                style: GoogleFonts.nunito(
+                                                  textStyle: TextStyle(
+                                                    color: Colors.grey.shade700,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
+                                            DataCell(
+                                              Text(
+                                                levels[ex.level != 0
+                                                    ? ex.level - 1
+                                                    : 1],
+                                                style: GoogleFonts.nunito(
+                                                  textStyle: TextStyle(
+                                                    color: Colors.grey.shade700,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            DataCell(
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: FilledButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor: Colors
+                                                        .redAccent, // Cambia el color de fondo aquí
+                                                  ),
+                                                  onPressed: () {
+                                                    _openDialogRemoveExercise(
+                                                        ex.idTask as int);
+                                                  },
+                                                  child: const Text(
+                                                    "Eliminar",
+                                                    style: TextStyle(
+                                                      fontFamily: 'IkkaRounded',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ]);
+                                        }).toList(),
                                       ),
-                                    ]);
-                                  }).toList(),
-                                ),
-                              ),
-                            )
-                          ],
-                        );
-                      }
-                    },
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FloatingActionButton(
-              onPressed: _openDialogAddExercise,
-              backgroundColor: Theme.of(context).primaryColor,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
               ),
-            ),
-          )
-        ],
-      ),
-    ));
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FloatingActionButton(
+                  onPressed: _openDialogAddExercise,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ],
+          ),
+        )));
   }
 }
 
@@ -360,8 +405,8 @@ class AddExerciseDialog extends StatelessWidget {
         var width = MediaQuery.of(context).size.width;
 
         return Container(
-          height: height - 550,
-          width: width - 1200,
+          height: height - 400,
+          width: width - 800,
           child: Column(
             children: [
               const SizedBox(

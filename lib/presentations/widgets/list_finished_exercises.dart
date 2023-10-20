@@ -27,14 +27,14 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
   Future? _fetchData;
 
   Future fetchData() async {
-    final response = await Api.get("${Param.getResolvedExercises}/${widget.idPatient}" );
+    final response =
+        await Api.get("${Param.getResolvedExercises}/${widget.idPatient}");
 
     for (var element in response.data) {
       _finishedTasks.add(PhonemeTaskResolvedModel(
         idPhoneme: element["idPhoneme"],
         namePhoneme: element["namePhoneme"],
       ));
-
     }
 
     return response;
@@ -104,15 +104,11 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
                           ),
                           onPressed: () {
                             // TODO: GET PATIENT ID
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    maintainState: true,
-                                    builder: (context) => 
-                                        PhonemeExercisesResults(
-                                            idPatient: widget.idPatient,
-                                            idPhoneme: task
-                                                .idPhoneme)));
+                            context.goNamed("phoneme_exercises_result",
+                                pathParameters: {
+                                  'idPatient': widget.idPatient.toString(),
+                                  'idPhoneme': task.idPhoneme.toString(),
+                                });
                           },
                           child: const Text(
                             "Ingresar",
@@ -169,7 +165,7 @@ class ButtonStaticPhoneme extends StatelessWidget {
             if (namePhoneme.length > 3)
               Text("Consonántica",
                   style: GoogleFonts.nunito(
-                      fontSize: 12,
+                      fontSize: 8,
                       color: colorList[2],
                       fontWeight: FontWeight.w900))
           ],

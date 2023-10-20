@@ -62,7 +62,7 @@ class _LoginForm extends StatelessWidget {
     final loginProv = context.watch<LoginProvider>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 600),
+      padding: const EdgeInsets.symmetric(horizontal: 400),
       child: Column(
         children: [
           const SizedBox(height: 50),

@@ -11,6 +11,8 @@ import 'package:speak_app_web/presentations/screens/manage_patient_screen.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/exercises_results.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/manage_exercises.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/manage_phoneme_exercises.dart';
+import 'package:speak_app_web/presentations/screens/patient_section/phoneme_exercises_results.dart';
+import 'package:speak_app_web/presentations/screens/patient_section/rfi_results.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/tab_bar_patient.dart';
 import 'package:speak_app_web/providers/auth_provider.dart';
 
@@ -149,26 +151,77 @@ class AppRouter {
                                   }),
                             ]),
                         GoRoute(
-                          name: 'exercises_result',
-                          path: ':idPatient/exercises_results',
-                          parentNavigatorKey: _shellTabNavigator,
-                          pageBuilder: (context, state) {
-                            return CustomTransitionPage(
-                              key: state.pageKey,
-                              child: ExercisesResults(idPatient: int.parse(
-                                  state.pathParameters['idPatient'] as String)),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return FadeTransition(
-                                  opacity:
-                                      CurveTween(curve: Curves.fastOutSlowIn)
-                                          .animate(animation),
-                                  child: child,
-                                );
-                              },
-                            );
-                          },
-                        ),
+                            name: 'exercises_result',
+                            path: ':idPatient/exercises_results',
+                            parentNavigatorKey: _shellTabNavigator,
+                            pageBuilder: (context, state) {
+                              return CustomTransitionPage(
+                                key: state.pageKey,
+                                child: ExercisesResults(
+                                    idPatient: int.parse(
+                                        state.pathParameters['idPatient']
+                                            as String)),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return FadeTransition(
+                                    opacity:
+                                        CurveTween(curve: Curves.fastOutSlowIn)
+                                            .animate(animation),
+                                    child: child,
+                                  );
+                                },
+                              );
+                            },
+                            routes: [
+                              GoRoute(
+                                  path: ':idPhoneme',
+                                  name: 'phoneme_exercises_result',
+                                  parentNavigatorKey: _shellTabNavigator,
+                                  pageBuilder: (context, state) {
+                                    return CustomTransitionPage(
+                                      key: state.pageKey,
+                                      child: PhonemeExercisesResults(
+                                          idPatient: int.parse(
+                                              state.pathParameters['idPatient']
+                                                  as String),
+                                          idPhoneme: int.parse(
+                                              state.pathParameters['idPhoneme']
+                                                  as String)),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        return FadeTransition(
+                                          opacity: CurveTween(
+                                                  curve: Curves.fastOutSlowIn)
+                                              .animate(animation),
+                                          child: child,
+                                        );
+                                      },
+                                    );
+                                  }),
+                            ]),
+                            GoRoute(
+                            name: 'rfi_result',
+                            path: ':idPatient/rfi',
+                            parentNavigatorKey: _shellTabNavigator,
+                            pageBuilder: (context, state) {
+                              return CustomTransitionPage(
+                                key: state.pageKey,
+                                child: RFIResults(
+                                    idPatient: int.parse(
+                                        state.pathParameters['idPatient']
+                                            as String)),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return FadeTransition(
+                                    opacity:
+                                        CurveTween(curve: Curves.fastOutSlowIn)
+                                            .animate(animation),
+                                    child: child,
+                                  );
+                                },
+                              );
+                            },
+                            ),
                       ])
                 ]),
             GoRoute(
