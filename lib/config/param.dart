@@ -23,7 +23,7 @@ class Param {
   static const getCareers = "/careers";
   static const getExercises = "/tasks/items";
   static const getTasks = "/tasks/";
-  static const getTasksByPhoneme = "/tasks/change-url";
+  static const getTasksByPhoneme = "/tasks/";
   static const getPending = "/pending/1";
   static const getGroupExercises = "/groupExercises";
   static const getPatients = "/patients";

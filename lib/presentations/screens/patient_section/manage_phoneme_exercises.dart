@@ -149,7 +149,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
               .width, // Ocupa todo el ancho de la pantalla
           margin: const EdgeInsets.symmetric(horizontal: 100, vertical: 30),
           child: Stack(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.topRight,
             children: [
               Row(
                 children: [
@@ -213,6 +213,9 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                     ),
                                     Container(
                                       width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
                                       child: DataTable(
                                         columns: const [
                                           DataColumn(label: Text('Categoria')),
