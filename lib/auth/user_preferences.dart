@@ -1,6 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_app_web/auth/user.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class UserPreferences {
   Future<bool> saveUser(User user) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -15,6 +17,7 @@ class UserPreferences {
     prefs.setString("token", user.token);
     prefs.setString("renewalToken", user.renewalToken);
 
+    // ignore: deprecated_member_use
     return prefs.commit();
   }
 
@@ -43,7 +46,7 @@ class UserPreferences {
         renewalToken: renewalToken);
   }
 
-  void removeUser() async {
+  Future<void> removeUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     prefs.remove("username");
@@ -51,7 +54,6 @@ class UserPreferences {
     prefs.remove("phone");
     prefs.remove("type");
     prefs.remove("token");
-
     prefs.clear();
   }
 
