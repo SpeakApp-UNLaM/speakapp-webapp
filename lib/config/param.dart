@@ -17,7 +17,7 @@ enum Categories { syllable, word, phrase }
 
 class Param {
   //10.0.2.2 IP especial para emuladores, que mapea la IP del HOST el cual está ejecutando (equivalente a LOCALHOST)
-  static const urlServer = "http://20.228.196.68:9292/speak-app/";
+  static const urlServer = "http://52.146.34.30:9292/speak-app/";
   static const postTranscription = "/speech-recognition/transcription";
 
   static const getCareers = "/careers";

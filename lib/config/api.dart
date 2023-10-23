@@ -15,8 +15,6 @@ class Api {
 
   static Future get(String path) async {
     try {
-
-
       final resp = await _dio.get(path);
 
       return resp;
@@ -53,6 +51,12 @@ class Api {
       return resp;
     } catch (e) {
       throw ('Error en el delete');
+    }
+  }
+
+  static void setToken(String token) {
+    if (token != "") {
+      _dio.options.headers[HttpHeaders.authorizationHeader] = "Bearer $token";
     }
   }
 }

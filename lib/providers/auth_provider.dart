@@ -35,9 +35,12 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void checkLoggedIn() {
+  Future<void> checkLoggedIn() async {
     loggedIn = prefs.getBool('LoggedIn') ?? false;
-    loggedIn = true;
+    if (loggedIn) {
+      final token = await UserPreferences().getToken();
+      Api.setToken(token);
+    }
   }
 
   Status _loggedInStatus = Status.NotLoggedIn;
@@ -59,6 +62,8 @@ class AuthProvider with ChangeNotifier {
       final Map<String, dynamic> responseData = response.data;
 
       var token = responseData['token'];
+      Api.setToken(responseData['token']);
+
       loggedIn = true;
       //User authUser = User.fromJson(userData);
       User authUser = User(
