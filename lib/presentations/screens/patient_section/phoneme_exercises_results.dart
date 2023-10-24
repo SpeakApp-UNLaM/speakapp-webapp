@@ -24,7 +24,7 @@ class PhonemeExercisesResults extends StatefulWidget {
       _PhonemeExercisesResultsState();
 }
 
-class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with TickerProviderStateMixin {
+class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
 
   final List<TaskResolvedModel> _finishedTasks = [];
@@ -59,7 +59,10 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with 
 
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller = AnimationController(
+      vsync: this, // Asegúrate de usar "this" como TickerProvider.
+      duration: Duration(seconds: 1),
+    );
 
     _fetchData = fetchData();
   }

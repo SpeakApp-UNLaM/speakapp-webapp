@@ -15,7 +15,7 @@ class BlockPhoneme extends StatefulWidget {
 }
 
 class BlockPhonemeState extends State<BlockPhoneme>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   final List<ButtonPhoneme> _buttonList = [];
 
   Future? _fetchData;

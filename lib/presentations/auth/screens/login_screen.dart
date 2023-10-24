@@ -74,7 +74,7 @@ class _LoginForm extends StatelessWidget {
                       fontWeight: FontWeight.w800))),
           const SizedBox(height: 90),
           CustomTextFormField(
-            label: 'Correo',
+            label: 'Correo/Usuario',
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) =>
                 context.read<LoginProvider>().onEmailChange(value),

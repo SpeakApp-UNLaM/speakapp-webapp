@@ -23,7 +23,7 @@ class ListFinishedExercises extends StatefulWidget {
 }
 
 class ListFinishedExercisesState extends State<ListFinishedExercises>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   final List<PhonemeTaskResolvedModel> _finishedTasks = [];
   Future? _fetchData;
   late final AnimationController _controller;
@@ -43,7 +43,10 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
   }
 
   void initState() {
-    _controller = AnimationController(vsync: this);
+    _controller = AnimationController(
+      vsync: this, // Asegúrate de usar "this" como TickerProvider.
+      duration: Duration(seconds: 1),
+    );
 
     super.initState();
     _fetchData = fetchData();
@@ -51,6 +54,7 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 

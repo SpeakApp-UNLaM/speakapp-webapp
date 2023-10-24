@@ -17,7 +17,8 @@ class CardUser extends StatefulWidget {
   CardUserState createState() => CardUserState();
 }
 
-class CardUserState extends State<CardUser> with TickerProviderStateMixin {
+class CardUserState extends State<CardUser>
+    with SingleTickerProviderStateMixin {
   final List<PatientModel> _patientsList = [];
   Future? _fetchData;
   late final AnimationController _controller;
@@ -34,13 +35,18 @@ class CardUserState extends State<CardUser> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _controller = AnimationController(
+      vsync: this, // Asegúrate de usar "this" como TickerProvider.
+      duration: Duration(seconds: 1),
+    );
+
     super.initState();
-    _controller = AnimationController(vsync: this);
     _fetchData = fetchData();
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 

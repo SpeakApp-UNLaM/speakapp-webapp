@@ -22,7 +22,7 @@ class TabBarPatient extends StatefulWidget {
 }
 
 class _TabBarPatientState extends State<TabBarPatient>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
   late PatientModel patient;
   Future? _fetchData;

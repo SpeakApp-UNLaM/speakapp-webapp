@@ -16,12 +16,15 @@ class AnimationL extends StatefulWidget {
   State<AnimationL> createState() => _AnimationLState();
 }
 
-class _AnimationLState extends State<AnimationL> with TickerProviderStateMixin {
+class _AnimationLState extends State<AnimationL> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller = AnimationController(
+      vsync: this, // Asegúrate de usar "this" como TickerProvider.
+      duration: Duration(seconds: 1),
+    );
   }
 
   @override

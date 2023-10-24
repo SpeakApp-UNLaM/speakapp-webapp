@@ -21,7 +21,8 @@ class RFIResults extends StatefulWidget {
   _RFIResultsState createState() => _RFIResultsState();
 }
 
-class _RFIResultsState extends State<RFIResults> with TickerProviderStateMixin {
+class _RFIResultsState extends State<RFIResults>
+    with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
 
   final List<RFI> _rfiResults = [];
@@ -41,13 +42,17 @@ class _RFIResultsState extends State<RFIResults> with TickerProviderStateMixin {
 
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller = AnimationController(
+      vsync: this, // Asegúrate de usar "this" como TickerProvider.
+      duration: Duration(seconds: 1),
+    );
 
     _fetchData = fetchData();
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 

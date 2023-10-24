@@ -31,7 +31,7 @@ class ManagePhonemeExercises extends StatefulWidget {
 }
 
 class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   Future<List<Task>>? _fetchData;
   late Phoneme phonemeData;
   late final AnimationController _controller;
@@ -62,7 +62,11 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this);
+    _controller = AnimationController(
+      vsync: this, // Asegúrate de usar "this" como TickerProvider.
+      duration: Duration(seconds: 1),
+    );
+
     context.read<ExerciseProvider>().refreshData();
     context.read<ExerciseProvider>().setPhonemeId = int.parse(widget.idPhoneme);
     _fetchData = fetchData();
@@ -70,6 +74,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
@@ -192,12 +197,14 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Container(
+                                    key: Key('loading'),
                                     height: MediaQuery.of(context).size.height *
                                         0.7,
                                     child: Center(
                                         child: CircularProgressIndicator()));
                               } else if (snapshot.hasError) {
                                 return Container(
+                                    key: Key('error'),
                                     width: MediaQuery.of(context).size.width,
                                     child: Center(
                                         child:
