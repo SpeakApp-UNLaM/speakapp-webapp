@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
@@ -20,12 +21,13 @@ class RFIResults extends StatefulWidget {
   _RFIResultsState createState() => _RFIResultsState();
 }
 
-class _RFIResultsState extends State<RFIResults> {
+class _RFIResultsState extends State<RFIResults> with TickerProviderStateMixin {
   int selectedIndex = 0;
 
   final List<RFI> _rfiResults = [];
 
   late Future _fetchData;
+  late final AnimationController _controller;
 
   Future fetchData() async {
     final response = await Api.get("${Param.getRfi}/${widget.idPatient}");
@@ -39,6 +41,8 @@ class _RFIResultsState extends State<RFIResults> {
 
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this);
+
     _fetchData = fetchData();
   }
 
@@ -53,181 +57,203 @@ class _RFIResultsState extends State<RFIResults> {
         future: _fetchData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Container(
+                constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.height * 0.5),
+                child: Center(child: CircularProgressIndicator()));
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
+          } else if (snapshot.data != null && snapshot.data.data.length == 0) {
+            return Center(
+              child: Container(
+                key: Key('box'),
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/NoResultsBox.json',
+                      controller: _controller,
+                      onLoaded: (composition) {
+                        _controller
+                          ..duration = composition.duration
+                          ..repeat();
+                      },
+                      width:
+                          250, // Ajusta el ancho de la animación según tus necesidades
+                      height:
+                          250, // Ajusta el alto de la animación según tus necesidades
+                    ),
+                    const SizedBox(
+                        height: 50), // Espacio entre la animación y el texto
+                    Text(
+                      "Aun no se han realizado el test RFI para este paciente",
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           } else {
             return Row(
               children: [
-                FutureBuilder(
-                    future: _fetchData,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Expanded(
-                            child: Center(child: CircularProgressIndicator()));
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.only(top: 50),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularPercentIndicator(
-                                      radius: 40.0,
-                                      lineWidth: 8.0,
-                                      animation: true,
-                                      percent: _rfiResults
-                                              .where((element) =>
-                                                  element.status == 'YES')
-                                              .length /
-                                          _rfiResults.length,
-                                      center: Text(
-                                        "${(_rfiResults.where((element) => element.status == 'YES').length / _rfiResults.length * 100).toStringAsFixed(2)}%",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                          fontFamily: 'IkkaRounded',
-                                          color: colorList[4],
-                                        ),
-                                      ),
-                                      footer: Text(
-                                        "Correctos",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                          fontFamily: 'IkkaRounded',
-                                          color: colorList[4],
-                                        ),
-                                      ),
-                                      circularStrokeCap:
-                                          CircularStrokeCap.round,
-                                      progressColor: colorList[4],
-                                      backgroundColor: Colors.grey.shade200,
-                                    ),
-                                    const SizedBox(
-                                      width: 50,
-                                    ),
-                                    CircularPercentIndicator(
-                                      radius: 40.0,
-                                      lineWidth: 8.0,
-                                      animation: true,
-                                      percent: _rfiResults
-                                              .where((element) =>
-                                                  element.status == 'NO')
-                                              .length /
-                                          _rfiResults.length,
-                                      center: Text(
-                                        "${(_rfiResults.where((element) => element.status == 'NO').length / _rfiResults.length * 100).toStringAsFixed(2)}%",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                          fontFamily: 'IkkaRounded',
-                                          color: Colors.redAccent,
-                                        ),
-                                      ),
-                                      footer: const Text(
-                                        "Incorrectos",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                          fontFamily: 'IkkaRounded',
-                                          color: Colors.redAccent,
-                                        ),
-                                      ),
-                                      circularStrokeCap:
-                                          CircularStrokeCap.round,
-                                      progressColor: Colors.redAccent,
-                                      backgroundColor: Colors.grey.shade200,
-                                    ),
-                                  ],
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 50),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularPercentIndicator(
+                              radius: 40.0,
+                              lineWidth: 8.0,
+                              animation: true,
+                              percent: _rfiResults
+                                      .where(
+                                          (element) => element.status == 'YES')
+                                      .length /
+                                  _rfiResults.length,
+                              center: Text(
+                                "${(_rfiResults.where((element) => element.status == 'YES').length / _rfiResults.length * 100).toStringAsFixed(2)}%",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  fontFamily: 'IkkaRounded',
+                                  color: colorList[4],
                                 ),
-                                SizedBox(height: 50),
-                                Expanded(
-                                    child: SingleChildScrollView(
-                                  child: DataTable(
-                                    border: TableBorder(
-                                      horizontalInside: BorderSide(
-                                        width: 3,
-                                        style: BorderStyle.solid,
-                                        color: Colors.grey.shade200,
-                                      ),
-                                    ),
-                                    dataRowMinHeight: 60,
-                                    dataRowMaxHeight: 100,
-                                    columns: const [
-                                      DataColumn(label: Text('N° Ejercicio')),
-                                      DataColumn(label: Text('Palabra')),
-                                      DataColumn(label: Text('Resultado')),
-                                    ],
-                                    rows: _rfiResults
-                                        .asMap()
-                                        .entries
-                                        .map((entry) {
-                                      final index = entry.key;
-                                      final result = entry.value;
-
-                                      return DataRow(cells: [
-                                        DataCell(Container(
-                                          // Espaciado vertical
-                                          child: Text(
-                                            result.idRfi.toString(), // Muestra el índice + 1
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.nunito(
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        )),
-                                        DataCell(Container(
-                                          // Espaciado vertical
-                                          child: Text(
-                                            result.name
-                                                .toUpperCase(), // Muestra el índice + 1
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.nunito(
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        )),
-                                        DataCell(Container(
-                                          // Espaciado vertical
-                                          child: RawMaterialButton(
-                                            onPressed: () {},
-                                            elevation: 2.0,
-                                            fillColor: result.status == 'YES'
-                                                ? colorList[4]
-                                                : Colors.redAccent,
-                                            child: Icon(
-                                              result.status == 'YES'
-                                                  ? Icons.check
-                                                  : Icons.close,
-                                              size: 20.0,
-                                              color: Colors.white,
-                                            ),
-                                            padding: EdgeInsets.all(5.0),
-                                            shape: CircleBorder(),
-                                          ),
-                                        )),
-                                      ]);
-                                    }).toList(),
-                                  ),
-                                ))
-                              ],
+                              ),
+                              footer: Text(
+                                "Correctos",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  fontFamily: 'IkkaRounded',
+                                  color: colorList[4],
+                                ),
+                              ),
+                              circularStrokeCap: CircularStrokeCap.round,
+                              progressColor: colorList[4],
+                              backgroundColor: Colors.grey.shade200,
                             ),
+                            const SizedBox(
+                              width: 50,
+                            ),
+                            CircularPercentIndicator(
+                              radius: 40.0,
+                              lineWidth: 8.0,
+                              animation: true,
+                              percent: _rfiResults
+                                      .where(
+                                          (element) => element.status == 'NO')
+                                      .length /
+                                  _rfiResults.length,
+                              center: Text(
+                                "${(_rfiResults.where((element) => element.status == 'NO').length / _rfiResults.length * 100).toStringAsFixed(2)}%",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  fontFamily: 'IkkaRounded',
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                              footer: const Text(
+                                "Incorrectos",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15.0,
+                                  fontFamily: 'IkkaRounded',
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                              circularStrokeCap: CircularStrokeCap.round,
+                              progressColor: Colors.redAccent,
+                              backgroundColor: Colors.grey.shade200,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 50),
+                        Expanded(
+                            child: SingleChildScrollView(
+                          child: DataTable(
+                            border: TableBorder(
+                              horizontalInside: BorderSide(
+                                width: 3,
+                                style: BorderStyle.solid,
+                                color: Colors.grey.shade200,
+                              ),
+                            ),
+                            dataRowMinHeight: 60,
+                            dataRowMaxHeight: 100,
+                            columns: const [
+                              DataColumn(label: Text('N° Ejercicio')),
+                              DataColumn(label: Text('Palabra')),
+                              DataColumn(label: Text('Resultado')),
+                            ],
+                            rows: _rfiResults.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final result = entry.value;
+
+                              return DataRow(cells: [
+                                DataCell(Container(
+                                  // Espaciado vertical
+                                  child: Text(
+                                    result.idRfi
+                                        .toString(), // Muestra el índice + 1
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.nunito(
+                                      color: Theme.of(context).primaryColorDark,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                )),
+                                DataCell(Container(
+                                  // Espaciado vertical
+                                  child: Text(
+                                    result.name
+                                        .toUpperCase(), // Muestra el índice + 1
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.nunito(
+                                      color: Theme.of(context).primaryColorDark,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                )),
+                                DataCell(Container(
+                                  // Espaciado vertical
+                                  child: RawMaterialButton(
+                                    onPressed: () {},
+                                    elevation: 2.0,
+                                    fillColor: result.status == 'YES'
+                                        ? colorList[4]
+                                        : Colors.redAccent,
+                                    child: Icon(
+                                      result.status == 'YES'
+                                          ? Icons.check
+                                          : Icons.close,
+                                      size: 20.0,
+                                      color: Colors.white,
+                                    ),
+                                    padding: EdgeInsets.all(5.0),
+                                    shape: CircleBorder(),
+                                  ),
+                                )),
+                              ]);
+                            }).toList(),
                           ),
-                        );
-                      }
-                    })
+                        ))
+                      ],
+                    ),
+                  ),
+                )
               ],
             );
           }

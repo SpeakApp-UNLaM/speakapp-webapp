@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
@@ -25,6 +26,7 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
     with TickerProviderStateMixin {
   final List<PhonemeTaskResolvedModel> _finishedTasks = [];
   Future? _fetchData;
+  late final AnimationController _controller;
 
   Future fetchData() async {
     final response =
@@ -41,6 +43,8 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
   }
 
   void initState() {
+    _controller = AnimationController(vsync: this);
+
     super.initState();
     _fetchData = fetchData();
   }
@@ -61,6 +65,43 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
+            } else if (snapshot.data != null &&
+                snapshot.data.data.length == 0) {
+              return Center(
+                child: Container(
+                  key: Key('box'),
+                  constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height * 0.5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/animations/NoResultsBox.json',
+                        controller: _controller,
+                        onLoaded: (composition) {
+                          _controller
+                            ..duration = composition.duration
+                            ..repeat();
+                        },
+                        width:
+                            250, // Ajusta el ancho de la animación según tus necesidades
+                        height:
+                            250, // Ajusta el alto de la animación según tus necesidades
+                      ),
+                      const SizedBox(
+                          height: 50), // Espacio entre la animación y el texto
+                      Text(
+                        "Aun no se han resuelto ejercicios de este fónema",
+                        style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             } else {
               return SingleChildScrollView(
                   child: Theme(

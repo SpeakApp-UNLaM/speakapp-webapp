@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/models/patient_model.dart';
@@ -19,6 +20,7 @@ class CardUser extends StatefulWidget {
 class CardUserState extends State<CardUser> with TickerProviderStateMixin {
   final List<PatientModel> _patientsList = [];
   Future? _fetchData;
+  late final AnimationController _controller;
 
   Future fetchData() async {
     final response = await Api.get(Param.getPatients);
@@ -33,6 +35,7 @@ class CardUserState extends State<CardUser> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this);
     _fetchData = fetchData();
   }
 
@@ -88,7 +91,82 @@ class CardUserState extends State<CardUser> with TickerProviderStateMixin {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return Center(
+                      child: Container(
+                        key: Key('no-results'),
+                        constraints: BoxConstraints(
+                            minHeight:
+                                MediaQuery.of(context).size.height * 0.5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/animations/NoResults.json',
+                              controller: _controller,
+                              onLoaded: (composition) {
+                                _controller
+                                  ..duration = composition.duration
+                                  ..repeat();
+                              },
+                              width:
+                                  200, // Ajusta el ancho de la animación según tus necesidades
+                              height:
+                                  200, // Ajusta el alto de la animación según tus necesidades
+                            ),
+                            const SizedBox(
+                                height:
+                                    50), // Espacio entre la animación y el texto
+                            Text(
+                              "Ha ocurrido un error inesperado: ${snapshot.error}",
+                              style: GoogleFonts.nunito(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.data != null &&
+                      (snapshot.data.data).length == 0) {
+                    return Center(
+                      child: Container(
+                        key: Key('box'),
+                        constraints: BoxConstraints(
+                            minHeight:
+                                MediaQuery.of(context).size.height * 0.5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/animations/NoResultsBox.json',
+                              controller: _controller,
+                              onLoaded: (composition) {
+                                _controller
+                                  ..duration = composition.duration
+                                  ..repeat();
+                              },
+                              width:
+                                  250, // Ajusta el ancho de la animación según tus necesidades
+                              height:
+                                  250, // Ajusta el alto de la animación según tus necesidades
+                            ),
+                            const SizedBox(
+                                height:
+                                    50), // Espacio entre la animación y el texto
+                            Text(
+                              "No se encontraron pacientes",
+                              style: GoogleFonts.nunito(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   } else {
                     return SingleChildScrollView(
                       child: Container(

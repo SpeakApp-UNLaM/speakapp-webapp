@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/api.dart';
@@ -33,6 +34,8 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
     with TickerProviderStateMixin {
   Future<List<Task>>? _fetchData;
   late Phoneme phonemeData;
+  late final AnimationController _controller;
+
   Future<List<Task>> fetchData() async {
     // obtenemos phoneme
     final responsePhoneme =
@@ -48,7 +51,8 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
 
     List<Task> lst = [];
 
-    if (response.data.length != 0) {
+    Map<String, dynamic> tasks = response.data;
+    if (response.data.length != 0 && tasks["phoneme"] != null) {
       lst.add(TaskModel.fromJson(response.data).toTaskEntity());
     }
 
@@ -58,6 +62,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this);
     context.read<ExerciseProvider>().refreshData();
     context.read<ExerciseProvider>().setPhonemeId = int.parse(widget.idPhoneme);
     _fetchData = fetchData();
@@ -197,6 +202,41 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                     child: Center(
                                         child:
                                             Text('Error: ${snapshot.error}')));
+                              }
+                              if (snapshot.data != null &&
+                                  snapshot.data!.isEmpty) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Lottie.asset(
+                                        'assets/animations/NoResultsBox.json',
+                                        controller: _controller,
+                                        onLoaded: (composition) {
+                                          _controller
+                                            ..duration = composition.duration
+                                            ..repeat();
+                                        },
+                                        width:
+                                            200, // Ajusta el ancho de la animación según tus necesidades
+                                        height:
+                                            200, // Ajusta el alto de la animación según tus necesidades
+                                      ),
+                                      const SizedBox(
+                                          height:
+                                              50), // Espacio entre la animación y el texto
+                                      Text(
+                                        "Aún no posee ejercicios asignados",
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context)
+                                              .primaryColorDark,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               } else {
                                 return Column(
                                   children: [

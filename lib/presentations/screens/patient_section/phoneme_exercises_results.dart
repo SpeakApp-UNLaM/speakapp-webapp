@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
@@ -23,7 +24,7 @@ class PhonemeExercisesResults extends StatefulWidget {
       _PhonemeExercisesResultsState();
 }
 
-class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
+class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with TickerProviderStateMixin {
   int selectedIndex = 0;
 
   final List<TaskResolvedModel> _finishedTasks = [];
@@ -31,6 +32,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
 
   late Future _fetchData;
   late Future _fetchTaskData;
+  late final AnimationController _controller;
 
   Future fetchData() async {
     final response = await Api.get(
@@ -57,6 +59,8 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
 
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this);
+
     _fetchData = fetchData();
   }
 
@@ -71,9 +75,48 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
         future: _fetchData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Container(
+                constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.height * 0.5),
+                child: Center(child: CircularProgressIndicator()));
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
+          } else if (snapshot.data != null && snapshot.data.data.length == 0) {
+            return Center(
+              child: Container(
+                key: Key('box'),
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      'assets/animations/NoResultsBox.json',
+                      controller: _controller,
+                      onLoaded: (composition) {
+                        _controller
+                          ..duration = composition.duration
+                          ..repeat();
+                      },
+                      width:
+                          250, // Ajusta el ancho de la animación según tus necesidades
+                      height:
+                          250, // Ajusta el alto de la animación según tus necesidades
+                    ),
+                    const SizedBox(
+                        height: 50), // Espacio entre la animación y el texto
+                    Text(
+                      "No se encontraron pacientes",
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           } else {
             return Row(
               children: [
@@ -168,7 +211,8 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
                     future: _fetchTaskData,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Expanded(child: Center(child: CircularProgressIndicator()));
+                        return const Expanded(
+                            child: Center(child: CircularProgressIndicator()));
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
@@ -254,7 +298,8 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> {
                                 ),
                                 SizedBox(height: 50),
                                 Expanded(
-                                  child: SingleChildScrollView(child: DataTable(
+                                    child: SingleChildScrollView(
+                                  child: DataTable(
                                     border: TableBorder(
                                       horizontalInside: BorderSide(
                                         width: 3,
