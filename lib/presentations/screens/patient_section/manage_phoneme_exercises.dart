@@ -203,12 +203,50 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                     child: Center(
                                         child: CircularProgressIndicator()));
                               } else if (snapshot.hasError) {
-                                return Container(
-                                    key: Key('error'),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Center(
-                                        child:
-                                            Text('Error: ${snapshot.error}')));
+                                return Expanded(
+                                  child: Center(
+                                    child: Container(
+                                      key: Key('box'),
+                                      constraints: BoxConstraints(
+                                          minHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.5),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Lottie.asset(
+                                            'assets/animations/NoResults.json',
+                                            controller: _controller,
+                                            onLoaded: (composition) {
+                                              _controller
+                                                ..duration =
+                                                    composition.duration
+                                                ..repeat();
+                                            },
+                                            width:
+                                                250, // Ajusta el ancho de la animación según tus necesidades
+                                            height:
+                                                250, // Ajusta el alto de la animación según tus necesidades
+                                          ),
+                                          const SizedBox(
+                                              height:
+                                                  50), // Espacio entre la animación y el texto
+                                          Text(
+                                            "Ha ocurrido un error inesperado: 'Error: ${snapshot.error}",
+                                            style: GoogleFonts.nunito(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context)
+                                                  .primaryColorDark,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
                               }
                               if (snapshot.data != null &&
                                   snapshot.data!.isEmpty) {
@@ -233,7 +271,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                           height:
                                               50), // Espacio entre la animación y el texto
                                       Text(
-                                        "Aún no posee ejercicios asignados",
+                                        "El paciente aún no posee ejercicios asignados",
                                         style: GoogleFonts.nunito(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600,

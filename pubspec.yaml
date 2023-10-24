@@ -47,6 +47,7 @@ dependencies:
   oktoast: ^3.3.2
   percent_indicator: ^4.0.1
   jwt_decoder: ^2.0.1
+  just_audio: ^0.9.35
 
 
 dev_dependencies:

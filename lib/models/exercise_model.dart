@@ -1,16 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:speak_app_web/config/helpers/play_audio_manager.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'image_model.dart';
+import 'dart:html' as html;
 
-List<ExerciseModel> exerciseModelFromJson(String str) =>
-    List<ExerciseModel>.from(
-        json.decode(str).map((x) => ExerciseModel.fromJson(x)));
 
 class ExerciseModel {
   int idTaskItem;
   TypeExercise type;
   String result;
+  String? audio;
   List<ImageExerciseModel> images;
 
   ExerciseModel({
@@ -18,13 +20,15 @@ class ExerciseModel {
     required this.type,
     required this.result,
     required this.images,
+    required this.audio,
   });
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
     return ExerciseModel(
       idTaskItem: json["idTaskItem"], // Valor predeterminado si es nulo
       type: Param.stringToEnumTypeExercise(json["type"]),
-      result: json["result"] ?? "", // Valor predeterminado si es nulo
+      result: json["result"] ?? "",
+      audio: json["audio"], // Valor predeterminado si es nulo
       images: (json["images"] as List<dynamic>?)
               ?.map((x) => ImageExerciseModel.fromJson(x))
               .toList() ??

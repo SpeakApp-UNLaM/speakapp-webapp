@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:speak_app_web/config/api.dart';
+import 'package:speak_app_web/config/helpers/play_audio_manager.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
 import 'package:speak_app_web/domain/entities/exercise.dart';
@@ -10,6 +13,7 @@ import 'package:speak_app_web/models/category_model.dart';
 import 'package:speak_app_web/models/exercise_model.dart';
 import 'package:speak_app_web/models/task_resolved.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/view_exercise_result.dart';
+import 'package:speak_app_web/presentations/widgets/button_play_audio.dart';
 import 'package:speak_app_web/presentations/widgets/list_finished_exercises.dart';
 
 class PhonemeExercisesResults extends StatefulWidget {
@@ -24,7 +28,8 @@ class PhonemeExercisesResults extends StatefulWidget {
       _PhonemeExercisesResultsState();
 }
 
-class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with SingleTickerProviderStateMixin {
+class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
+    with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
 
   final List<TaskResolvedModel> _finishedTasks = [];
@@ -217,7 +222,45 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with 
                         return const Expanded(
                             child: Center(child: CircularProgressIndicator()));
                       } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Expanded(
+                          child: Center(
+                            child: Container(
+                              key: Key('box'),
+                              constraints: BoxConstraints(
+                                  minHeight:
+                                      MediaQuery.of(context).size.height * 0.5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Lottie.asset(
+                                    'assets/animations/NoResults.json',
+                                    controller: _controller,
+                                    onLoaded: (composition) {
+                                      _controller
+                                        ..duration = composition.duration
+                                        ..repeat();
+                                    },
+                                    width:
+                                        250, // Ajusta el ancho de la animación según tus necesidades
+                                    height:
+                                        250, // Ajusta el alto de la animación según tus necesidades
+                                  ),
+                                  const SizedBox(
+                                      height:
+                                          50), // Espacio entre la animación y el texto
+                                  Text(
+                                    "Ha ocurrido un error inesperado: 'Error: ${snapshot.error}",
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
                       } else {
                         return Expanded(
                           child: Container(
@@ -316,6 +359,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with 
                                       DataColumn(label: Text('Ejercicios')),
                                       DataColumn(label: Text('Tipo Ejercicio')),
                                       DataColumn(label: Text('Resultado')),
+                                      DataColumn(label: Text('Audio')),
                                     ],
                                     rows: _finishedTaskItems
                                         .asMap()
@@ -358,6 +402,8 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with 
                                             fillColor: task.result == 'SUCCESS'
                                                 ? colorList[4]
                                                 : Colors.redAccent,
+                                            padding: EdgeInsets.all(5.0),
+                                            shape: CircleBorder(),
                                             child: Icon(
                                               task.result == 'SUCCESS'
                                                   ? Icons.check
@@ -365,10 +411,15 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults> with 
                                               size: 20.0,
                                               color: Colors.white,
                                             ),
-                                            padding: EdgeInsets.all(5.0),
-                                            shape: CircleBorder(),
                                           ),
                                         )),
+                                        DataCell(task.audio != ""
+                                            ? Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: ButtonPlayAudio(
+                                                  base64: task.audio as String),
+                                            )
+                                            : Text('-')),
                                       ]);
                                     }).toList(),
                                   ),
