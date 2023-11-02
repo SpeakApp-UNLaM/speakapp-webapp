@@ -93,7 +93,7 @@ class _RFIResultsState extends State<RFIResults>
                     const SizedBox(
                         height: 50), // Espacio entre la animación y el texto
                     Text(
-                      "Aun no se han realizado el test RFI para este paciente",
+                      "Aun no se ha realizado el test RFI para este paciente",
                       style: GoogleFonts.nunito(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

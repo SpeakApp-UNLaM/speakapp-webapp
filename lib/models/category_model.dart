@@ -7,12 +7,15 @@ class CategoryModel {
   int? idTask;
   Categories category;
   int level;
+  DateTime endDate;
+
   List<ExerciseModel>? exercisesResult; 
 
   CategoryModel({
     required this.idTask,
     required this.category,
     required this.level,
+    required this.endDate,
     this.exercisesResult
   });
 
@@ -20,6 +23,7 @@ class CategoryModel {
         idTask: json["idTask"],
         category: Param.stringToEnumCategories(json["category"]),
         level: json["level"],
+        endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : DateTime.now()
       );
 
   Map<String, dynamic> toJson() => {

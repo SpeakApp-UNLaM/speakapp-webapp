@@ -7,11 +7,11 @@ import 'package:speak_app_web/config/param.dart';
 import 'image_model.dart';
 import 'dart:html' as html;
 
-
 class ExerciseModel {
   int idTaskItem;
   TypeExercise type;
   String result;
+  String resultExpected;
   String? audio;
   List<ImageExerciseModel> images;
 
@@ -19,6 +19,7 @@ class ExerciseModel {
     required this.idTaskItem,
     required this.type,
     required this.result,
+    required this.resultExpected,
     required this.images,
     required this.audio,
   });
@@ -28,6 +29,7 @@ class ExerciseModel {
       idTaskItem: json["idTaskItem"], // Valor predeterminado si es nulo
       type: Param.stringToEnumTypeExercise(json["type"]),
       result: json["result"] ?? "",
+      resultExpected: json["resultExpected"] ?? "",
       audio: json["audio"], // Valor predeterminado si es nulo
       images: (json["images"] as List<dynamic>?)
               ?.map((x) => ImageExerciseModel.fromJson(x))

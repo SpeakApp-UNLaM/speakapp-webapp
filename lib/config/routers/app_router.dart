@@ -12,6 +12,7 @@ import 'package:speak_app_web/presentations/screens/patient_section/exercises_re
 import 'package:speak_app_web/presentations/screens/patient_section/manage_exercises.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/manage_phoneme_exercises.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/phoneme_exercises_results.dart';
+import 'package:speak_app_web/presentations/screens/patient_section/reports.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/rfi_results.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/tab_bar_patient.dart';
 import 'package:speak_app_web/providers/auth_provider.dart';
@@ -207,6 +208,29 @@ class AppRouter {
                               return CustomTransitionPage(
                                 key: state.pageKey,
                                 child: RFIResults(
+                                    idPatient: int.parse(
+                                        state.pathParameters['idPatient']
+                                            as String)),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return FadeTransition(
+                                    opacity:
+                                        CurveTween(curve: Curves.fastOutSlowIn)
+                                            .animate(animation),
+                                    child: child,
+                                  );
+                                },
+                              );
+                            },
+                            ),
+                             GoRoute(
+                            name: 'reports',
+                            path: ':idPatient/reports',
+                            parentNavigatorKey: _shellTabNavigator,
+                            pageBuilder: (context, state) {
+                              return CustomTransitionPage(
+                                key: state.pageKey,
+                                child: Reports(
                                     idPatient: int.parse(
                                         state.pathParameters['idPatient']
                                             as String)),

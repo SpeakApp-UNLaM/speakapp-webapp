@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:speak_app_web/config/api.dart';
@@ -11,7 +12,9 @@ import 'package:speak_app_web/config/theme/app_theme.dart';
 import 'package:speak_app_web/domain/entities/exercise.dart';
 import 'package:speak_app_web/models/category_model.dart';
 import 'package:speak_app_web/models/exercise_model.dart';
+import 'package:speak_app_web/models/task_item_resolved.dart';
 import 'package:speak_app_web/models/task_resolved.dart';
+import 'package:speak_app_web/presentations/screens/patient_section/show_exercise_result_dialog.dart';
 import 'package:speak_app_web/presentations/screens/patient_section/view_exercise_result.dart';
 import 'package:speak_app_web/presentations/widgets/button_play_audio.dart';
 import 'package:speak_app_web/presentations/widgets/list_finished_exercises.dart';
@@ -60,6 +63,21 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
     }
 
     return response;
+  }
+
+  void _openDialogShowExerciseResult(int idTaskItem, TypeExercise typeExercise,
+      String? audio, String? resultExpected) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ShowExerciseResultDialog(
+          idTaskItem: idTaskItem,
+          typeExercise: typeExercise,
+          audio: audio,
+          resultExpected: resultExpected,
+        ); // Replace MyDialogWidget with your custom dialog content
+      },
+    );
   }
 
   void initState() {
@@ -129,25 +147,6 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
             return Row(
               children: [
                 Column(children: [
-                  /*
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.arrow_back),
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      Text(
-                        'Volver',
-                        style: GoogleFonts.nunito(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: Theme.of(context).primaryColor),
-                      ),
-                    ],
-                  ),*/
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.zero,
@@ -159,57 +158,101 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                       ),
                       width: 300.0,
                       child: ListView.builder(
-                        itemCount: _finishedTasks[0].categoriesModel.length,
+                        itemCount: _finishedTasks[0].categoriesModel.length + 1,
                         itemBuilder: (context, index) {
-                          return ListTile(
-                            selectedTileColor: colorList[7],
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            shape: Border(
-                                bottom: index == selectedIndex
-                                    ? BorderSide(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 3)
-                                    : BorderSide(
-                                        color: Colors.grey.shade200, width: 1),
-                                top: index == selectedIndex && index != 0
-                                    ? BorderSide(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 3)
-                                    : BorderSide(
-                                        color: Colors.grey.shade200, width: 1)),
-                            selected: index == selectedIndex,
-                            onTap: () {
-                              setState(() {
-                                selectedIndex = index;
-                                _fetchTaskData = fetchTaskData(_finishedTasks[0]
-                                    .categoriesModel[index]
-                                    .idTask as int);
-                              });
-                            },
-                            leading: ButtonStaticPhoneme(
-                                idPhoneme: 1,
-                                namePhoneme:
-                                    _finishedTasks[0].phonemeModel.namePhoneme),
-                            title: Text(
-                              Param.categoriesDescriptions[_finishedTasks[0]
-                                  .categoriesModel[index]
-                                  .category] as String,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.nunito(
-                                color: Theme.of(context).primaryColorDark,
-                                fontWeight: FontWeight.w700,
+                          if (index != 0) {
+                            return ListTile(
+                              selectedTileColor: colorList[7],
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              shape: Border(
+                                  bottom: index - 1 == selectedIndex
+                                      ? BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 2)
+                                      : BorderSide(
+                                          color: Colors.grey.shade200,
+                                          width: 1),
+                                  top: index - 1 == selectedIndex && index != 1
+                                      ? BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 2)
+                                      : BorderSide(
+                                          color: Colors.grey.shade200,
+                                          width: 1)),
+                              selected: index - 1 == selectedIndex,
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = index - 1;
+                                  _fetchTaskData = fetchTaskData(
+                                      _finishedTasks[0]
+                                          .categoriesModel[index - 1]
+                                          .idTask as int);
+                                });
+                              },
+                              title: Text(
+                                Param.categoriesDescriptions[_finishedTasks[0]
+                                    .categoriesModel[index - 1]
+                                    .category] as String,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.nunito(
+                                  color: Theme.of(context).primaryColorDark,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              'Nivel ${_finishedTasks[0].categoriesModel[index].level}',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.nunito(
-                                color: Theme.of(context).primaryColorDark,
-                                fontWeight: FontWeight.w700,
+                              subtitle: Text(
+                                'Nivel ${_finishedTasks[0].categoriesModel[index - 1].level}',
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.nunito(
+                                  color: Theme.of(context).primaryColorDark,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
-                            ),
-                          );
+                              trailing: Text(
+                                DateFormat('dd/MM/yyyy HH:mm').format(
+                                    _finishedTasks[0]
+                                        .categoriesModel[index - 1]
+                                        .endDate),
+                                style: GoogleFonts.nunito(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            );
+                          } else {
+                            return ListTile(
+                              selectedTileColor: colorList[7],
+                              visualDensity: const VisualDensity(vertical: 4),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              shape: Border(
+                                bottom: BorderSide(
+                                    color: Colors.grey.shade200, width: 1),
+                                top: BorderSide(
+                                    color: Colors.grey.shade200, width: 1),
+                              ),
+                              subtitle: Container(
+                                alignment: Alignment.topCenter,
+                                child: ButtonStaticPhoneme(
+                                  idPhoneme: 1,
+                                  namePhoneme: _finishedTasks[0]
+                                      .phonemeModel
+                                      .namePhoneme,
+                                ),
+                              ),
+                              title: Container(
+                                alignment: Alignment
+                                    .centerLeft, // Alinea el contenido a la izquierda
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(Icons.arrow_back),
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
                     ),
@@ -359,7 +402,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                       DataColumn(label: Text('Ejercicios')),
                                       DataColumn(label: Text('Tipo Ejercicio')),
                                       DataColumn(label: Text('Resultado')),
-                                      DataColumn(label: Text('Audio')),
+                                      DataColumn(label: Text('Detalle')),
                                     ],
                                     rows: _finishedTaskItems
                                         .asMap()
@@ -413,13 +456,34 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                             ),
                                           ),
                                         )),
-                                        DataCell(task.audio != ""
-                                            ? Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: ButtonPlayAudio(
-                                                  base64: task.audio as String),
-                                            )
-                                            : Text('-')),
+                                        DataCell(Container(
+                                          // Espaciado vertical
+                                          child: RawMaterialButton(
+                                            onPressed: () {
+                                              _openDialogShowExerciseResult(
+                                                  task.idTaskItem,
+                                                  task.type,
+                                                  task.type ==
+                                                          TypeExercise.speak
+                                                      ? task.audio
+                                                      : "",
+                                                  task.type ==
+                                                          TypeExercise.speak
+                                                      ? task.resultExpected
+                                                      : "");
+                                            },
+                                            elevation: 2.0,
+                                            fillColor:
+                                                Theme.of(context).primaryColor,
+                                            padding: EdgeInsets.all(5.0),
+                                            shape: CircleBorder(),
+                                            child: Icon(
+                                              Icons.search,
+                                              size: 20.0,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )),
                                       ]);
                                     }).toList(),
                                   ),
@@ -436,133 +500,3 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
         });
   }
 }
-
-
-/*
-class PhonemeExercisesResults extends StatelessWidget {
-  final List<CategoryModel> exercisesResult;
-  final String namePhoneme;
-
-  const PhonemeExercisesResults(
-      {super.key, required this.exercisesResult, required this.namePhoneme});
-
-  @override
-  Widget build(BuildContext context) {
-    
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 23, vertical: 50),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back),
-                  color: Theme.of(context).primaryColor,
-                ),
-                Text(
-                  'Volver',
-                  style: GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w800, color: Theme.of(context).primaryColor),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Theme(
-                      data:
-                          Theme.of(context).copyWith(dividerColor: Colors.red),
-                      child: DataTable(
-                        border: TableBorder(
-                          horizontalInside: BorderSide(
-                            width: 3,
-                            style: BorderStyle.solid,
-                            color: Colors.grey.shade200,
-                          ),
-                        ),
-                        dataRowMinHeight: 60,
-                        dataRowMaxHeight: 100,
-                        columns: const [
-                          DataColumn(label: Text('Fonema')),
-                          DataColumn(label: Text('Nivel')),
-                          DataColumn(label: Text('Categoría')),
-                          DataColumn(label: Text('Acción')),
-                        ],
-                        rows: exercisesResult.map((task) {
-                          return DataRow(cells: [
-                            DataCell(Container(
-                              // Espaciado vertical
-                              child: ButtonStaticPhoneme(
-                                idPhoneme: 1,
-                                namePhoneme: this.namePhoneme,
-                              ),
-                            )),
-                            DataCell(Container(
-                              // Espaciado vertical
-                              child: Text(
-                                task.level.toString(),
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.nunito(
-                                  color: Theme.of(context).primaryColorDark,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            )),
-                            DataCell(Container(
-                              // Espaciado vertical
-                              child: Text(
-                                Param.categoriesDescriptions[task.category]
-                                    as String,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.nunito(
-                                  color: Theme.of(context).primaryColorDark,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            )),
-                            DataCell(Container(
-                              child: FilledButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: colorList[4],
-                                ),
-                                onPressed: () {
-                                 Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    maintainState: true,
-                                    builder: (context) =>
-                                        ViewExerciseResult(
-                                            exercisesResult:
-                                                task.exercisesResult as List<ExerciseModel>,
-                                            namePhoneme: namePhoneme)));
-                                },
-                                child: const Text(
-                                  "Ver resultado",
-                                  style: TextStyle(
-                                    fontFamily: 'IkkaRounded',
-                                  ),
-                                ),
-                              ),
-                            )),
-                          ]);
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-*/

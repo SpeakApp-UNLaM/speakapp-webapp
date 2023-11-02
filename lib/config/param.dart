@@ -17,13 +17,14 @@ enum Categories { syllable, word, phrase }
 
 class Param {
   //10.0.2.2 IP especial para emuladores, que mapea la IP del HOST el cual está ejecutando (equivalente a LOCALHOST)
-  static const urlServer = "http://52.146.34.30:9292/speak-app/";
+  static const urlServer = "http://20.51.135.236:9292/speak-app/";
   static const postTranscription = "/speech-recognition/transcription";
 
   static const getCareers = "/careers";
   static const getExercises = "/tasks/items";
   static const getTasks = "/tasks/";
   static const getTasksByPhoneme = "/tasks/";
+  static const getTaskItems = "/task-item/";
   static const getPending = "/pending/1";
   static const getGroupExercises = "/groupExercises";
   static const getPatients = "/patients";
@@ -33,6 +34,7 @@ class Param {
   static const modelWhisper = "whisper-1";
   static const postLogin = "/auth/signin";
   static const postTasks = "/tasks";
+
 
   static const tamImages = 120.0;
 

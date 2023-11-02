@@ -95,7 +95,7 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
                       const SizedBox(
                           height: 50), // Espacio entre la animación y el texto
                       Text(
-                        "Aun no se han resuelto ejercicios de este fónema",
+                        "El paciente aún no ha resuelto ejercicios",
                         style: GoogleFonts.nunito(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -187,34 +187,30 @@ class ButtonStaticPhoneme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60.0,
-      width: 60.0,
-      child: Container(
-        height: 60,
-        width: 60,
-        decoration: BoxDecoration(
-          color: colorList[0],
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8),
-          ),
+    return Container(
+      height: 70,
+      width: 70,
+      decoration: BoxDecoration(
+        color: colorList[0],
+        borderRadius: const BorderRadius.all(
+          Radius.circular(8),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(namePhoneme.replaceAll("CONSONANTICA", "").trim(),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(namePhoneme.replaceAll("CONSONANTICA", "").trim(),
+              style: GoogleFonts.nunito(
+                  fontSize: 24,
+                  color: colorList[2],
+                  fontWeight: FontWeight.w900)),
+          if (namePhoneme.length > 3)
+            Text("Consonántica",
                 style: GoogleFonts.nunito(
-                    fontSize: 24,
+                    fontSize: 8,
                     color: colorList[2],
-                    fontWeight: FontWeight.w900)),
-            if (namePhoneme.length > 3)
-              Text("Consonántica",
-                  style: GoogleFonts.nunito(
-                      fontSize: 8,
-                      color: colorList[2],
-                      fontWeight: FontWeight.w900))
-          ],
-        ),
+                    fontWeight: FontWeight.w900))
+        ],
       ),
     );
   }

@@ -253,6 +253,12 @@ class _TabBarPatientState extends State<TabBarPatient>
                                     'idPatient': widget.idPatient.toString()
                                   });
                               break;
+                            case 3:
+                              context.goNamed('reports',
+                                  pathParameters: {
+                                    'idPatient': widget.idPatient.toString()
+                                  });
+                              break;
                             // Agrega casos para las otras pestañas...
                           }
                         },
