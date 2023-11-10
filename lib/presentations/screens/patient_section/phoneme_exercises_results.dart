@@ -66,18 +66,26 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
   }
 
   void _openDialogShowExerciseResult(int idTaskItem, TypeExercise typeExercise,
-      String? audio, String? resultExpected) async {
-    await showDialog(
+      String? audio, String? resultExpected, String? result) async {
+    final _result = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return ShowExerciseResultDialog(
-          idTaskItem: idTaskItem,
-          typeExercise: typeExercise,
-          audio: audio,
-          resultExpected: resultExpected,
-        ); // Replace MyDialogWidget with your custom dialog content
+            idTaskItem: idTaskItem,
+            typeExercise: typeExercise,
+            audio: audio,
+            resultExpected: resultExpected,
+            result:
+                result); // Replace MyDialogWidget with your custom dialog content
       },
     );
+
+    if (_result) {
+      setState(() {
+        _fetchTaskData = fetchTaskData(
+            _finishedTasks[0].categoriesModel[selectedIndex].idTask as int);
+      });
+    }
   }
 
   void initState() {
@@ -470,6 +478,10 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                                   task.type ==
                                                           TypeExercise.speak
                                                       ? task.resultExpected
+                                                      : "",
+                                                  task.type ==
+                                                          TypeExercise.speak
+                                                      ? task.result
                                                       : "");
                                             },
                                             elevation: 2.0,

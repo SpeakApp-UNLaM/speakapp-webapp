@@ -1,29 +1,29 @@
 class ReportModel {
+  int id;
   String title;
-  String subtitle;
   String body;
-  String date;
+  String createdAt;
   bool isExpanded;
 
   ReportModel({
+    required this.id,
     required this.title,
-    required this.subtitle,
     required this.body,
-    required this.date,
+    required this.createdAt,
     this.isExpanded = false
   });
 
   factory ReportModel.fromJson(Map<String, dynamic> json) => ReportModel(
+        id: json['id'],
         title: json['title'],
-        subtitle: json['subtitle'],
         body: json['body'],
-        date: json['date'],
+        createdAt: json['createdAt'],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "title": title,
-        "subtitle": subtitle,
         "body": body,
-        "date": date,
+        "createdAt": createdAt,
       };
 }

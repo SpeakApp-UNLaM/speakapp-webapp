@@ -31,39 +31,40 @@ class Param {
   static const getPhonemes = "/phonemes";
   static const getRfi = "/rfi";
   static const getResolvedExercises = "/resolve-exercises";
+  static const getReports = "/reports";
   static const modelWhisper = "whisper-1";
   static const postLogin = "/auth/signin";
   static const postTasks = "/tasks";
-
+  static const getMessages = "/chat-messages";
+  static const postSendMessage = "/chat-messages";
 
   static const tamImages = 120.0;
 
   static void showToast(String response) {
     Fluttertoast.showToast(
-      msg: 'Error: $response', // Mensaje de la excepción
-      toastLength: Toast
-          .LENGTH_LONG, // Duración del toast (Toast.LENGTH_LONG o Toast.LENGTH_SHORT)
-      gravity: ToastGravity
-          .CENTER, // Posición del toast (ToastGravity.TOP, ToastGravity.CENTER, ToastGravity.BOTTOM)
-      backgroundColor: Colors.red, // Color de fondo del toast
-      textColor: Colors.white,
-      timeInSecForIosWeb: 5 // Color del texto del toast
-    );
+        msg: 'Error: $response', // Mensaje de la excepción
+        toastLength: Toast
+            .LENGTH_LONG, // Duración del toast (Toast.LENGTH_LONG o Toast.LENGTH_SHORT)
+        gravity: ToastGravity
+            .CENTER, // Posición del toast (ToastGravity.TOP, ToastGravity.CENTER, ToastGravity.BOTTOM)
+        backgroundColor: Colors.red, // Color de fondo del toast
+        textColor: Colors.white,
+        timeInSecForIosWeb: 5 // Color del texto del toast
+        );
   }
 
   static void showSuccessToast(String msg) {
     Fluttertoast.showToast(
-      msg: msg, // Mensaje de la excepción
-      toastLength: Toast
-          .LENGTH_LONG, // Duración del toast (Toast.LENGTH_LONG o Toast.LENGTH_SHORT)
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: colorList[4], // Color de fondo del toast
-      textColor: Colors.white,
-      timeInSecForIosWeb: 3,// Color del texto del toast
-      fontSize: 18,
-      webPosition: "center",
-      webBgColor: "linear-gradient(#72bb53)"
-    );
+        msg: msg, // Mensaje de la excepción
+        toastLength: Toast
+            .LENGTH_LONG, // Duración del toast (Toast.LENGTH_LONG o Toast.LENGTH_SHORT)
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: colorList[4], // Color de fondo del toast
+        textColor: Colors.white,
+        timeInSecForIosWeb: 3, // Color del texto del toast
+        fontSize: 18,
+        webPosition: "center",
+        webBgColor: "linear-gradient(#72bb53)");
   }
 
   static TypeExercise stringToEnumTypeExercise(String value) =>
@@ -76,7 +77,7 @@ class Param {
     Categories.phrase: "Frases"
   };
 
-   static Map<TypeExercise, String> typeExercisesDescription = {
+  static Map<TypeExercise, String> typeExercisesDescription = {
     TypeExercise.speak: "Hablar",
     TypeExercise.order_syllable: "Ordenar Sílabas",
     TypeExercise.consonantal_syllable: "Sílaba Consonante",
@@ -86,15 +87,16 @@ class Param {
     TypeExercise.single_selection_word: "Selección de Palabra",
     TypeExercise.multiple_selection: "Selección Múltiple"
   };
-  
+
   static Categories getCategoryFromDescription(String description) {
-  for (var entry in categoriesDescriptions.entries) {
-    if (entry.value == description) {
-      return entry.key;
+    for (var entry in categoriesDescriptions.entries) {
+      if (entry.value == description) {
+        return entry.key;
+      }
     }
+    return Categories
+        .syllable; // Devolver null si no se encuentra ninguna coincidencia.
   }
-  return Categories.syllable; // Devolver null si no se encuentra ninguna coincidencia.
-}
 
   static Categories stringToEnumCategories(String value) => Categories.values
       .firstWhere((element) => element.toString() == 'Categories.$value');

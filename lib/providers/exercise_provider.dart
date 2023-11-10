@@ -54,4 +54,11 @@ class ExerciseProvider extends ChangeNotifier {
 
     return response;
   }
+
+  Future<Response> updateSpeakExercise(int idTaskItem, String result) async {
+    Response response =
+        await Api.put("${Param.getResolvedExercises}/$idTaskItem", null, {'result': result});
+
+    return response;
+  }
 }

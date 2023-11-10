@@ -9,42 +9,32 @@ class Reports extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 23, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Informes del paciente",
-                style: GoogleFonts.nunito(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-
-                  },
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 23, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Informes del paciente",
+                  style: GoogleFonts.nunito(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700),
                 ),
-              )
-            ],
-          ),
-          Divider(),
-          const SizedBox(
-            height: 30,
-          ),
-          ListReports(idPatient: idPatient)
-        ],
+               
+              ],
+            ),
+            Divider(),
+            const SizedBox(
+              height: 30,
+            ),
+            ListReports(idPatient: idPatient)
+          ],
+        ),
       ),
     );
   }

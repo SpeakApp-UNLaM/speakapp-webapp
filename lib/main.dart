@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speak_app_web/presentations/screens/message_section/message_provider.dart';
 import 'package:speak_app_web/providers/exercise_provider.dart';
 import 'package:speak_app_web/providers/play_audio_provider.dart';
+import 'package:speak_app_web/providers/report_provider.dart';
 import 'config/api.dart';
 import 'config/routers/app_router.dart';
 import 'config/theme/app_theme.dart';
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => ExerciseProvider()),
+        ChangeNotifierProvider(create: (_) => MessageProvider()),
+        ChangeNotifierProvider(create: (_) => ReportProvider()),
         Provider<AppRouter>(
           lazy: false,
           create: (BuildContext createContext) => AppRouter(authProvider),

@@ -13,9 +13,15 @@ class Api {
     };
   }
 
-  static Future get(String path) async {
+  static Future get(String path,
+      {Map<String, dynamic>? queryParameters}) async {
     try {
-      final resp = await _dio.get(path);
+      Response<dynamic> resp;
+      if (queryParameters != null) {
+        resp = await _dio.get(path, queryParameters: queryParameters);
+      } else {
+        resp = await _dio.get(path);
+      }
 
       return resp;
     } on DioException catch (e) {
@@ -34,12 +40,9 @@ class Api {
     return null;
   }
 
-  static Future put(String path, Map<String, dynamic> data) async {
-    final formData = FormData.fromMap(data);
-
+  static Future put(String path, [Map<String, dynamic>? data, Map<String, dynamic>? queryParameters]) async {
     try {
-      final resp = await _dio.put(path, data: formData);
-      return resp.data;
+      return await _dio.put(path, data: data, queryParameters: queryParameters);
     } catch (e) {
       throw ('Error en el PUT');
     }

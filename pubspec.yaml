@@ -49,6 +49,8 @@ dependencies:
   jwt_decoder: ^2.0.1
   just_audio: ^0.9.35
   intl: ^0.18.1
+  flutter_chat_ui: ^1.6.9
+
 
 
 dev_dependencies:
