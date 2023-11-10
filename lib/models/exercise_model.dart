@@ -30,7 +30,7 @@ class ExerciseModel {
       type: Param.stringToEnumTypeExercise(json["type"]),
       result: json["result"] ?? "",
       resultExpected: json["resultExpected"] ?? "",
-      audio: json["audio"], // Valor predeterminado si es nulo
+      audio: json["audio"] ?? "", // Valor predeterminado si es nulo
       images: (json["images"] as List<dynamic>?)
               ?.map((x) => ImageExerciseModel.fromJson(x))
               .toList() ??

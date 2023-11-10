@@ -42,11 +42,12 @@ class HomeScreen extends StatelessWidget {
                   icon: const Icon(Icons.message, color: Colors.white),
                   label:
                       const TextPrimary(text: 'Mensajes', color: Colors.white)),
+                      /*
               TextButton.icon(
                   onPressed: () => {context.go('/calendar_view')},
                   icon: const Icon(Icons.calendar_month, color: Colors.white),
                   label: const TextPrimary(
-                      text: 'Calendario', color: Colors.white)),
+                      text: 'Calendario', color: Colors.white)),*/
               ElevatedButton(
                   onPressed: () => _openDialogShowProfessionalCode(),
                   child: TextPrimary(

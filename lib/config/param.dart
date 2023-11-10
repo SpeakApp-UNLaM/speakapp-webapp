@@ -10,7 +10,8 @@ enum TypeExercise {
   single_selection_syllable, // ignore: constant_identifier_names
   order_syllable, // ignore: constant_identifier_names
   single_selection_word, // ignore: constant_identifier_names
-  consonantal_syllable, // ignore: constant_identifier_names
+  consonantal_syllable,
+  order_word // ignore: constant_identifier_names
 }
 
 enum Categories { syllable, word, phrase }
@@ -36,6 +37,7 @@ class Param {
   static const postLogin = "/auth/signin";
   static const postTasks = "/tasks";
   static const getMessages = "/chat-messages";
+  static const getContacts = "/chat-messages/contacts";
   static const postSendMessage = "/chat-messages";
 
   static const tamImages = 120.0;
@@ -85,7 +87,8 @@ class Param {
     TypeExercise.single_selection_syllable: "Selección de Sílaba",
     TypeExercise.multiple_match_selection: "Ordenar Selección Múltiple",
     TypeExercise.single_selection_word: "Selección de Palabra",
-    TypeExercise.multiple_selection: "Selección Múltiple"
+    TypeExercise.multiple_selection: "Selección Múltiple",
+    TypeExercise.order_word: "Ordenar Palabras"
   };
 
   static Categories getCategoryFromDescription(String description) {

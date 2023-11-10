@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
+import 'package:speak_app_web/models/contact_model.dart';
 import 'package:speak_app_web/models/patient_model.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:speak_app_web/presentations/screens/message_section/message_provider.dart';
@@ -27,18 +29,17 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
 
   Future? _fetchData;
   late final AnimationController _controller;
-  final List<PatientModel> _patientsList = [];
+  final List<ContactModel> _patients = [];
   int selectedIndex = 0;
   int selectedPatient = 0;
   late Timer _timer;
 
   Future fetchData() async {
-    final response = await Api.get(Param.getPatients);
+    final response = await Api.get(Param.getContacts);
 
     for (var element in response.data) {
-      _patientsList.add(PatientModel.fromJson(element));
+      _patients.add(ContactModel.fromJson(element));
     }
-
     return response;
   }
 
@@ -70,10 +71,9 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
     return Scaffold(
         body: /*const ChatPage(),*/
             Container(
-      width: MediaQuery.of(context)
-          .size
-          .width,
-          padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20), // Ocupa todo el ancho de la pantalla
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(
+          horizontal: 100, vertical: 20), // Ocupa todo el ancho de la pantalla
       margin: const EdgeInsets.all(30.0),
       child: Card(
         color: Theme.of(context).cardColor,
@@ -166,9 +166,9 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.zero,
-                          width: 300.0,
+                          width: 350.0,
                           child: ListView.builder(
-                            itemCount: _patientsList.length,
+                            itemCount: _patients.length,
                             itemBuilder: (context, index) {
                               return Card(
                                 clipBehavior: Clip.antiAlias,
@@ -184,21 +184,52 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                                     setState(() {
                                       selectedIndex = index;
                                       selectedPatient =
-                                          _patientsList[index].idPatient;
-                                      messageProvider
-                                          .updateUserTo(selectedPatient, _patientsList[index].firstName, _patientsList[index].lastName);
+                                          _patients[index].author.id;
+                                      messageProvider.updateUserTo(
+                                          selectedPatient,
+                                          _patients[index].author.firstName,
+                                          _patients[index].author.lastName);
                                       messageProvider.updateMessages();
                                     });
                                   },
-                                  title: Text(
-                                    "${_patientsList[index].firstName} ${_patientsList[index].lastName}",
-                                    textAlign: TextAlign.left,
-                                    style: GoogleFonts.nunito(
-                                      color: Theme.of(context).primaryColorDark,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    ),
-                                  ),
+                                  title: _patients[index].lastMessage != null
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Text(
+                                              "${_patients[index].author.firstName} ${_patients[index].author.lastName}",
+                                              textAlign: TextAlign.left,
+                                              style: GoogleFonts.nunito(
+                                                color: Theme.of(context)
+                                                    .primaryColorDark,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${_patients[index].lastMessage}",
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
+                                              style: GoogleFonts.nunito(
+                                                color: Colors.grey.shade500,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Text(
+                                          "${_patients[index].author.firstName} ${_patients[index].author.lastName}",
+                                          style: GoogleFonts.nunito(
+                                            color: Theme.of(context)
+                                                .primaryColorDark,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                          ),
+                                        ),
                                   leading: CircleAvatar(
                                     radius: 20, // Reducir el tamaño del avatar
                                     backgroundColor: Colors.transparent,
@@ -211,13 +242,17 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                                       ),
                                     ),
                                   ),
-                                  trailing: Text(
-                                    "24/09/2023",
-                                    style: GoogleFonts.nunito(
-                                        color: Colors.grey.shade500,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600),
-                                  ),
+                                  trailing: _patients[index].lastDateMessage != null
+                                      ? Text(
+                                          DateFormat('dd/MM/yyyy HH:mm').format(
+                                              _patients[index].lastDateMessage
+                                                  as DateTime),
+                                          style: GoogleFonts.nunito(
+                                              color: Colors.grey.shade500,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : const Text(""),
                                 ),
                               );
                             },
