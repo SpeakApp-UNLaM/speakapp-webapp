@@ -510,22 +510,22 @@ class AddExerciseDialog extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               CustomDropdownButton(
-                options: const ['Inicial', 'Intermedio', 'Final'],
-                label: 'Nivel',
-                onChanged: (value) {
-                  context.read<ExerciseProvider>().setLevel =
-                      levels.indexOf(value as String) + 1;
-                },
-                errorMessage: null,
-              ),
-              const SizedBox(height: 30),
-              CustomDropdownButton(
                 options: const ['Silabas', 'Palabras', 'Frases'],
                 label: 'Categoria',
                 onChanged: (value) {
                   context.read<ExerciseProvider>().setCategories = [
                     Param.getCategoryFromDescription(value as String)
                   ];
+                },
+                errorMessage: null,
+              ),
+              const SizedBox(height: 30),
+              CustomDropdownButton(
+                options: const ['Inicial', 'Intermedio', 'Final'],
+                label: 'Nivel',
+                onChanged: (value) {
+                  context.read<ExerciseProvider>().setLevel =
+                      levels.indexOf(value as String) + 1;
                 },
                 errorMessage: null,
               ),

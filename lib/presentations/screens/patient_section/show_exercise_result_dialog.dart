@@ -64,7 +64,7 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
         return 'Consigna: Seleccionar la sílaba que contiene la palabra asociada a la imágen';
       case TypeExercise.order_syllable:
         return 'Consigna: Ordenar las sílabas de la palabra';
-       case TypeExercise.order_word:
+      case TypeExercise.order_word:
         return 'Consigna: Ordenar las palabras de la frase';
       // Agrega más casos para otros tipos de ejercicio
       default:
@@ -84,16 +84,6 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
       _taskItemsResolved.add(TaskItemResolved.fromJson(element));
     }
 
-/*
-    _taskItemsResolved
-        .add(TaskItemResolved(resultExpected: "foca", resultSelected: "foca"));
-    _taskItemsResolved
-        .add(TaskItemResolved(resultExpected: "boca", resultSelected: "boca"));
-    _taskItemsResolved
-        .add(TaskItemResolved(resultExpected: "rota", resultSelected: "toca"));
-    _taskItemsResolved
-        .add(TaskItemResolved(resultExpected: "toca", resultSelected: "rota"));
-*/
     return response;
   }
 
@@ -186,7 +176,6 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                   child: () {
                     switch (widget.typeExercise) {
                       case TypeExercise.order_syllable:
-                      case TypeExercise.order_word:
                       case TypeExercise.multiple_match_selection:
                         return Padding(
                           padding: EdgeInsets.all(30),
@@ -459,7 +448,10 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    widget.resultExpected?.split(' ').length == 1 ? "Palabra del audio: " : "Frase del audio: ",
+                                    widget.resultExpected?.split(' ').length ==
+                                            1
+                                        ? "Palabra del audio: "
+                                        : "Frase del audio: ",
                                     style: GoogleFonts.nunito(
                                         fontSize: 18,
                                         color:

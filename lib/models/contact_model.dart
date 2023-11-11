@@ -13,14 +13,14 @@ class ContactModel {
   ContactModel({
     required this.author,
     required this.lastMessage,
-    required this.lastDateMessage,
+    this.lastDateMessage,
   });
 
   factory ContactModel.fromJson(Map<String, dynamic> json) {
     return ContactModel(
       author: AuthorModel.fromJson(json["author"]),
       lastMessage: json["lastMessage"],
-      lastDateMessage: json['endDate'] != null ? DateTime.parse(json['lastDateMessage']) : DateTime.now()
+      lastDateMessage: json['lastDateMessage'] == null ? null : DateTime.parse(json['lastDateMessage'])
     );
   }
 

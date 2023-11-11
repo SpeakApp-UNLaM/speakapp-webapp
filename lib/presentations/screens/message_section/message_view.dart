@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,17 +30,30 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
 
   Future? _fetchData;
   late final AnimationController _controller;
-  final List<ContactModel> _patients = [];
+  List<ContactModel> _patients = [];
+  List<Image?> _patientsImages = [];
   int selectedIndex = 0;
   int selectedPatient = 0;
   late Timer _timer;
 
   Future fetchData() async {
+    _patients = [];
     final response = await Api.get(Param.getContacts);
 
     for (var element in response.data) {
       _patients.add(ContactModel.fromJson(element));
     }
+
+    _patients.sort((a, b) => (b.lastDateMessage ?? DateTime(0))
+        .compareTo(a.lastDateMessage ?? DateTime(0)));
+
+    for (var element in _patients) {
+      _patientsImages.add(element.author.imageData == null
+          ? null
+          : Image.memory(base64.decode(element.author.imageData as String),
+              fit: BoxFit.cover));
+    }
+    
     return response;
   }
 
@@ -63,6 +77,8 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _timer.cancel();
+
     super.dispose();
   }
 
@@ -188,7 +204,8 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                                       messageProvider.updateUserTo(
                                           selectedPatient,
                                           _patients[index].author.firstName,
-                                          _patients[index].author.lastName);
+                                          _patients[index].author.lastName,
+                                          _patients[index].author.imageData);
                                       messageProvider.updateMessages();
                                     });
                                   },
@@ -230,19 +247,20 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                                             fontSize: 14,
                                           ),
                                         ),
-                                  leading: CircleAvatar(
-                                    radius: 20, // Reducir el tamaño del avatar
-                                    backgroundColor: Colors.transparent,
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        "https://img.freepik.com/foto-gratis/nino-sonriente-aislado-rosa_23-2148984798.jpg?w=1380&t=st=1696089946~exp=1696090546~hmac=4035c3677d316811640bb086080f9a56d805c927a829156891b8bcfe83f28a28",
-                                        width: 40,
-                                        height: 40,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  trailing: _patients[index].lastDateMessage != null
+                                  leading:
+                                      _patients[index].author.imageData == null
+                                          ? const CircleAvatar(
+                                              child: ClipOval(
+                                                child: Icon(Icons.person),
+                                              ),
+                                            )
+                                          : CircleAvatar(
+                                              //TODO GET IMAGE FROM USER
+                                              backgroundImage: (_patientsImages[index] as Image).image
+                                                  
+                                            ),
+                                  trailing: _patients[index].lastDateMessage !=
+                                          null
                                       ? Text(
                                           DateFormat('dd/MM/yyyy HH:mm').format(
                                               _patients[index].lastDateMessage

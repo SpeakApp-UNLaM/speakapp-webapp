@@ -23,7 +23,7 @@ class CategoryModel {
         idTask: json["idTask"],
         category: Param.stringToEnumCategories(json["category"]),
         level: json["level"],
-        endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : DateTime.now()
+        endDate: json['endDate'] != null ? DateTime.parse(json['endDate']).subtract(const Duration(hours: 3)) : DateTime.now()
       );
 
   Map<String, dynamic> toJson() => {

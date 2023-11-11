@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -9,17 +11,22 @@ class MessageProvider extends ChangeNotifier {
   int _userTo = 0;
   String _userToFirstName = "";
   String _userToLastName = "";
+  Image? _userToImageData;
   List<types.Message> get messages => _messages;
 
   int get userTo => _userTo;
   String get userToFirstName => _userToFirstName;
   String get userToLastName => _userToLastName;
+  Image? get userToImageData => _userToImageData;
 
 
-  void updateUserTo(int userId, String firstName, String lastName) {
+
+  void updateUserTo(int userId, String firstName, String lastName, String? imageData) {
     _userTo = userId;
     _userToFirstName = firstName;
     _userToLastName = lastName;
+    _userToImageData = imageData != null ? Image.memory(base64.decode(imageData),
+                                                fit: BoxFit.cover) : null;
     notifyListeners();
   }
 

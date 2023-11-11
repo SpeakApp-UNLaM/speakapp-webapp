@@ -25,79 +25,84 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 80,
         backgroundColor: Theme.of(context).primaryColor,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(50.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(spacing: 50, children: [
-              TextButton.icon(
-                  onPressed: () => {context.go('/patients')},
-                  icon: const Icon(Icons.supervised_user_circle,
-                      color: Colors.white),
-                  label: const TextPrimary(
-                      text: 'Pacientes', color: Colors.white)),
-              TextButton.icon(
-                  onPressed: () => {context.go('/message_view')},
-                  icon: const Icon(Icons.message, color: Colors.white),
-                  label:
-                      const TextPrimary(text: 'Mensajes', color: Colors.white)),
-                      /*
-              TextButton.icon(
-                  onPressed: () => {context.go('/calendar_view')},
-                  icon: const Icon(Icons.calendar_month, color: Colors.white),
-                  label: const TextPrimary(
-                      text: 'Calendario', color: Colors.white)),*/
-              ElevatedButton(
-                  onPressed: () => _openDialogShowProfessionalCode(),
-                  child: TextPrimary(
-                      text: 'Mostrar codigo',
-                      color: Theme.of(context).primaryColor)),
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: PopupMenuButton(
-                    tooltip: "Abrir menú",
-                    onSelected: (SampleItem item) {
-                      switch (item) {
-                        case SampleItem.logOut:
-                        context.read<LoginProvider>().onLogOut(context);
-                        case SampleItem.config:
-                        context.go('/user_settings');
-                        default:
-                          return;
-                      }
-                    },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<SampleItem>>[
-                          const PopupMenuItem<SampleItem>(
-                            value: SampleItem.config,
-                            child: Row(
-                              children: [
-                                Icon(Icons.settings),
-                                SizedBox(width: 8),
-                                Text('Configuracion'),
-                              ],
-                            ),
-                          ),
-                          const PopupMenuDivider(),
-                          const PopupMenuItem<SampleItem>(
-                            value: SampleItem.logOut,
-                            child: Row(
-                              children: [
-                                Icon(Icons.logout),
-                                SizedBox(width: 8),
-                                Text('Salir'),
-                              ],
-                            ),
-                          ),
-                        ],
-                    child: const CircleAvatar(
-                        //TODO GET IMAGE FROM USER
-                        backgroundImage: NetworkImage(
-                            "https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*"))),
-              ),
-            ]),
+        actions: [
+          ElevatedButton(
+            onPressed: () => _openDialogShowProfessionalCode(),
+            child: TextPrimary(
+              text: 'Mostrar codigo',
+              color: Theme.of(context).primaryColor,
+            ),
           ),
+          const SizedBox(width: 30),
+          PopupMenuButton(
+            tooltip: "Abrir menú",
+            onSelected: (SampleItem item) {
+              switch (item) {
+                case SampleItem.logOut:
+                  context.read<LoginProvider>().onLogOut(context);
+                case SampleItem.config:
+                  context.go('/user_settings');
+                default:
+                  return;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+              const PopupMenuItem<SampleItem>(
+                value: SampleItem.config,
+                child: Row(
+                  children: [
+                    Icon(Icons.settings),
+                    const SizedBox(width: 8),
+                    Text('Configuración'),
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem<SampleItem>(
+                value: SampleItem.logOut,
+                child: Row(
+                  children: [
+                    Icon(Icons.logout),
+                    const SizedBox(width: 8),
+                    Text('Salir'),
+                  ],
+                ),
+              ),
+            ],
+            child: const CircleAvatar(
+              backgroundImage: NetworkImage(
+                "https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*",
+              ),
+            ),
+          ),
+          SizedBox(width: 30)
+        ],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Image(
+              width: 170,
+              height: 50,
+              fit: BoxFit.cover,
+              image: AssetImage('assets/branding/Logo_SpeakApp.png'),
+            ),
+            const Spacer(),
+            TextButton.icon(
+              onPressed: () => context.go('/patients'),
+              icon:
+                  const Icon(Icons.supervised_user_circle, color: Colors.white),
+              label: const TextPrimary(text: 'Pacientes', color: Colors.white),
+            ),
+            const SizedBox(width: 30),
+            TextButton.icon(
+              onPressed: () => context.go('/message_view'),
+              icon: const Icon(Icons.message, color: Colors.white),
+              label: const TextPrimary(text: 'Mensajes', color: Colors.white),
+            ),
+            const Spacer()
+          ],
         ),
       ),
       body: child,
@@ -111,25 +116,22 @@ class ShowCodeDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-
       contentPadding: const EdgeInsets.symmetric(vertical: 20),
       content: Builder(builder: (context) {
         var height = MediaQuery.of(context).size.height;
         var width = MediaQuery.of(context).size.width;
 
         return Container(
-          height: height - 800,
-          width: width - 1500,
+          height: height * 0.2,
+          width: width * 0.2,
           child: Center(
-            child: 
-              SelectableText(
-                'A2BBH2991ASKKK',
-                style: TextStyle(
-                    fontFamily: 'IkkaRounded',
-                    fontSize: 24,
-                    color: Theme.of(context).primaryColor),
-              ),
-            
+            child: SelectableText(
+              'A2BBH2991ASKKK',
+              style: TextStyle(
+                  fontFamily: 'IkkaRounded',
+                  fontSize: 24,
+                  color: Theme.of(context).primaryColor),
+            ),
           ),
         );
       }),

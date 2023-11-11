@@ -99,18 +99,18 @@ class _MessagesScreenState extends State<MessagesScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
-        leading: CircleAvatar(
-          radius: 20, // Reducir el tamaño del avatar
-          backgroundColor: Colors.transparent,
-          child: ClipOval(
-            child: Image.network(
-              "https://img.freepik.com/foto-gratis/nino-sonriente-aislado-rosa_23-2148984798.jpg?w=1380&t=st=1696089946~exp=1696090546~hmac=4035c3677d316811640bb086080f9a56d805c927a829156891b8bcfe83f28a28",
-              width: 40,
-              height: 40,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
+        leading: messageProvider.userToImageData == null
+                                          ? const CircleAvatar(
+                                              radius: 10,
+                                              child: ClipOval(
+                                                child: Icon(Icons.person),
+                                              ),
+                                            )
+                                          : CircleAvatar(
+                                            radius: 10,
+                                              //TODO GET IMAGE FROM USER
+                                              backgroundImage: (messageProvider.userToImageData as Image).image
+                                            ),
         title: Text(
           "${messageProvider.userToFirstName} ${messageProvider.userToLastName}",
           textAlign: TextAlign.left,

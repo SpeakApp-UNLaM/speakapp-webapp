@@ -62,6 +62,8 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
       _finishedTaskItems.add(ExerciseModel.fromJson(element));
     }
 
+    _finishedTaskItems.sort((a, b) => a.idTaskItem.compareTo(b.idTaskItem));
+
     return response;
   }
 
