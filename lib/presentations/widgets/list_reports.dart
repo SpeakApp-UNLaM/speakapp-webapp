@@ -224,6 +224,8 @@ class ListReportsState extends State<ListReports>
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: ExpansionPanelList(
+                      elevation: 3,
+                      dividerColor: Theme.of(context).primaryColor,
                       expansionCallback: (int index, bool isExpanded) {
                         setState(() {
                           _reports[index].isExpanded = isExpanded;
@@ -410,9 +412,8 @@ class RemoveReportDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
-        'Eliminar Ejercicio',
-        style: TextStyle(
-            fontFamily: 'IkkaRounded',
+        'Eliminar Informe',
+        style: GoogleFonts.nunito(
             fontSize: 24,
             color: Theme.of(context).primaryColor),
       ),

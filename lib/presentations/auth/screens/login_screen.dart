@@ -12,6 +12,8 @@ import '../../../providers/login_provider.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
+  
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -55,7 +57,7 @@ class LoginScreen extends StatelessWidget {
 
 class _LoginForm extends StatelessWidget {
   const _LoginForm();
-
+  
   @override
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).textTheme;

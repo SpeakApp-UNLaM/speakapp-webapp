@@ -123,49 +123,46 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
             future: _fetchData,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Expanded(
-                    child: Container(
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Center(child: CircularProgressIndicator())));
+                return Container(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Center(child: CircularProgressIndicator()));
               } else if (snapshot.hasError) {
-                return Expanded(
-                  child: Center(
-                    child: Container(
-                      key: Key('box'),
-                      constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height * 0.5,
-                          minWidth: MediaQuery.of(context).size.width * 0.5),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          /*
-                                    Lottie.asset(
-                                      'assets/animations/NoResults.json',
-                                      controller: _controller,
-                                      onLoaded: (composition) {
-                                        _controller
-                                          ..duration = composition.duration
-                                          ..repeat();
-                                      },
-                                      width:
-                                          250, // Ajusta el ancho de la animación según tus necesidades
-                                      height:
-                                          250, // Ajusta el alto de la animación según tus necesidades
-                                    ),*/
-                          const SizedBox(
-                              height:
-                                  50), // Espacio entre la animación y el texto
-                          Text(
-                            "Ha ocurrido un error inesperado: 'Error: ${snapshot.error}",
-                            style: GoogleFonts.nunito(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).primaryColorDark,
-                            ),
+                return Center(
+                  child: Container(
+                    key: Key('box'),
+                    constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height * 0.5,
+                        minWidth: MediaQuery.of(context).size.width * 0.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        /*
+                                  Lottie.asset(
+                                    'assets/animations/NoResults.json',
+                                    controller: _controller,
+                                    onLoaded: (composition) {
+                                      _controller
+                                        ..duration = composition.duration
+                                        ..repeat();
+                                    },
+                                    width:
+                                        250, // Ajusta el ancho de la animación según tus necesidades
+                                    height:
+                                        250, // Ajusta el alto de la animación según tus necesidades
+                                  ),*/
+                        const SizedBox(
+                            height:
+                                50), // Espacio entre la animación y el texto
+                        Text(
+                          "Ha ocurrido un error inesperado: 'Error: ${snapshot.error}",
+                          style: GoogleFonts.nunito(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).primaryColorDark,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -179,8 +176,7 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                       case TypeExercise.multiple_match_selection:
                         return Padding(
                           padding: EdgeInsets.all(30),
-                          child: Expanded(
-                              child: SingleChildScrollView(
+                          child: SingleChildScrollView(
                             child: DataTable(
                               border: TableBorder(
                                 horizontalInside: BorderSide(
@@ -244,14 +240,13 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                 ]);
                               }).toList(),
                             ),
-                          )),
+                          ),
                         );
                       // // Aquí puedes devolver el widget deseado para este caso
-                      case TypeExercise.multiple_selection:
+                      case TypeExercise.order_syllable:
                         return Padding(
                           padding: EdgeInsets.all(30),
-                          child: Expanded(
-                              child: SingleChildScrollView(
+                          child: SingleChildScrollView(
                             child: DataTable(
                               border: TableBorder(
                                 horizontalInside: BorderSide(
@@ -263,9 +258,8 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                               dataRowMinHeight: 40,
                               dataRowMaxHeight: 60,
                               columns: const [
-                                DataColumn(
-                                    label: Text('Audio/Resultado Esperado')),
-                                DataColumn(label: Text('Seleccionado')),
+                                DataColumn(label: Text('Selección')),
+                                DataColumn(label: Text('Opciones')),
                               ],
                               rows: _taskItemsResolved
                                   .asMap()
@@ -277,17 +271,17 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                 return DataRow(cells: [
                                   DataCell(Container(
                                     // Espaciado vertical
-                                    child: Text(
-                                      resolvedTask.resultExpected != null
-                                          ? resolvedTask.resultExpected!
-                                          : "-", // Muestra el índice + 1
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.nunito(
-                                        color:
-                                            Theme.of(context).primaryColorDark,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
+                                    child: resolvedTask.resultExpected != null
+                                        ? Icon(Icons.arrow_forward, color: resolvedTask.resultSelected.contains(resolvedTask.resultExpected ?? '-') ? colorList[4] : Colors.redAccent)
+                                        : Text(
+                                            "", // Muestra el índice + 1
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.nunito(
+                                              color: Theme.of(context)
+                                                  .primaryColorDark,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
                                   )),
                                   DataCell(Container(
                                     // Espaciado vertical
@@ -298,16 +292,7 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                               .toUpperCase()),
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.nunito(
-                                        color: resolvedTask.resultSelected
-                                                .contains(resolvedTask
-                                                            .resultExpected !=
-                                                        null
-                                                    ? resolvedTask
-                                                            .resultExpected
-                                                        as String
-                                                    : '-')
-                                            ? colorList[4]
-                                            : Colors.redAccent,
+                                        color: Theme.of(context).primaryColorDark,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -315,10 +300,12 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                 ]);
                               }).toList(),
                             ),
-                          )),
+                          ),
                         );
                       case TypeExercise.single_selection_syllable:
                       case TypeExercise.single_selection_word:
+                      case TypeExercise.multiple_selection:
+                      case TypeExercise.minimum_pairs_selection:
                         return Padding(
                           padding: EdgeInsets.all(20),
                           child: Column(
@@ -578,8 +565,7 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                       default:
                         return Padding(
                           padding: EdgeInsets.all(30),
-                          child: Expanded(
-                              child: SingleChildScrollView(
+                          child: SingleChildScrollView(
                             child: DataTable(
                               border: TableBorder(
                                 horizontalInside: BorderSide(
@@ -645,7 +631,7 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                 ]);
                               }).toList(),
                             ),
-                          )),
+                          ),
                         ); // Otra opción para el caso por defecto
                     }
                   }(),

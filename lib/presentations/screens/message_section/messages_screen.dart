@@ -76,6 +76,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
       text: message.text,
     );
     _addMessage(textMessage);
+    messageProvider.updateContacts();
   }
 
   Future<void> _loadMessages() async {
@@ -99,18 +100,22 @@ class _MessagesScreenState extends State<MessagesScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
-        leading: messageProvider.userToImageData == null
-                                          ? const CircleAvatar(
-                                              radius: 10,
-                                              child: ClipOval(
-                                                child: Icon(Icons.person),
-                                              ),
-                                            )
-                                          : CircleAvatar(
-                                            radius: 10,
-                                              //TODO GET IMAGE FROM USER
-                                              backgroundImage: (messageProvider.userToImageData as Image).image
-                                            ),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: messageProvider.userToImageData == null
+              ? CircleAvatar(
+                  radius: 10,
+                  foregroundColor: Theme.of(context).primaryColor,
+                  child: ClipOval(
+                    child: Icon(Icons.person),
+                  ),
+                )
+              : CircleAvatar(
+                  radius: 10,
+                  //TODO GET IMAGE FROM USER
+                  backgroundImage:
+                      (messageProvider.userToImageData as Image).image),
+        ),
         title: Text(
           "${messageProvider.userToFirstName} ${messageProvider.userToLastName}",
           textAlign: TextAlign.left,

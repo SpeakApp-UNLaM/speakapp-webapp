@@ -84,18 +84,36 @@ class _TabBarPatientState extends State<TabBarPatient>
                                     ),
                                   ),
                                   const SizedBox(height: 50),
-                                  CircleAvatar(
-                                    radius: 60, // Reducir el tamaño del avatar
-                                    backgroundColor: Colors.transparent,
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        "https://img.freepik.com/foto-gratis/nino-sonriente-aislado-rosa_23-2148984798.jpg?w=1380&t=st=1696089946~exp=1696090546~hmac=4035c3677d316811640bb086080f9a56d805c927a829156891b8bcfe83f28a28",
-                                        width: 120,
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
+                                  patient.imageData == null
+                                      ? PhysicalModel(
+                                          color: Theme.of(context).primaryColor,
+                                          shadowColor: Theme.of(context).primaryColor,
+                                          elevation: 12,
+                                          shape: BoxShape.circle,
+                                          child: CircleAvatar(
+                                            radius: 60,
+                                            backgroundColor: Theme.of(context)
+                                                .primaryColor,
+                                            foregroundColor:
+                                                Theme.of(context).scaffoldBackgroundColor,
+                                            child: const ClipOval(
+                                              child:
+                                                  Icon(Icons.person, size: 80),
+                                            ),
+                                          ),
+                                        )
+                                      : PhysicalModel(
+                                          color: Theme.of(context).primaryColor,
+                                          shape: BoxShape.circle,
+                                          shadowColor: Theme.of(context).primaryColor,
+                                          elevation: 12,
+                                          child: CircleAvatar(
+                                              radius: 60,
+                                              //TODO GET IMAGE FROM USER
+                                              backgroundImage:
+                                                  (patient.imageData as Image)
+                                                      .image),
+                                        ),
                                   const SizedBox(height: 20),
                                   Text(
                                     "${patient.lastName} ${patient.firstName}",
@@ -248,29 +266,27 @@ class _TabBarPatientState extends State<TabBarPatient>
                                   });
                               break;
                             case 2:
-                              context.goNamed('rfi_result',
-                                  pathParameters: {
-                                    'idPatient': widget.idPatient.toString()
-                                  });
+                              context.goNamed('rfi_result', pathParameters: {
+                                'idPatient': widget.idPatient.toString()
+                              });
                               break;
                             case 3:
-                              context.goNamed('reports',
-                                  pathParameters: {
-                                    'idPatient': widget.idPatient.toString()
-                                  });
+                              context.goNamed('reports', pathParameters: {
+                                'idPatient': widget.idPatient.toString()
+                              });
                               break;
                             // Agrega casos para las otras pestañas...
                           }
                         },
                         tabs: [
                           Tab(
-                              child: Text('Gestionar Practicas',
+                              child: Text('Gestionar Prácticas',
                                   style: GoogleFonts.nunito(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800))),
                           Tab(
-                              child: Text('Resultados de Practicas',
+                              child: Text('Resultados de Prácticas',
                                   style: GoogleFonts.nunito(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 16,

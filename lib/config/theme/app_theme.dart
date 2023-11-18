@@ -29,11 +29,10 @@ class AppTheme {
               fontFamily: 'IkkaRounded',
               fontWeight: FontWeight.w400,
             ),
-            titleSmall: const TextStyle(
+            titleSmall: GoogleFonts.nunito(
               fontSize: 12,
               color: Color(0xFF0277BD),
-              fontFamily: 'IkkaRounded',
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w800,
             ),
             labelSmall: const TextStyle(
                 fontSize: 12,

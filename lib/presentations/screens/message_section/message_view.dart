@@ -32,8 +32,7 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
   late final AnimationController _controller;
   List<ContactModel> _patients = [];
   List<Image?> _patientsImages = [];
-  int selectedIndex = 0;
-  int selectedPatient = 0;
+
   late Timer _timer;
 
   Future fetchData() async {
@@ -53,7 +52,7 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
           : Image.memory(base64.decode(element.author.imageData as String),
               fit: BoxFit.cover));
     }
-    
+
     return response;
   }
 
@@ -62,6 +61,7 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
     super.initState();
     authProvider = Provider.of<AuthProvider>(context, listen: false);
     messageProvider = Provider.of<MessageProvider>(context, listen: false);
+    messageProvider.updateContacts();
 
     _controller = AnimationController(vsync: this);
 
@@ -184,32 +184,40 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                           margin: EdgeInsets.zero,
                           width: 350.0,
                           child: ListView.builder(
-                            itemCount: _patients.length,
+                            itemCount: messageProvider.contacts.length,
                             itemBuilder: (context, index) {
                               return Card(
                                 clipBehavior: Clip.antiAlias,
+                                elevation: 5,
+                                surfaceTintColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 child: ListTile(
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 15, horizontal: 10),
-                                  tileColor: index != selectedIndex
-                                      ? Colors.transparent
-                                      : Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.2),
+                                  tileColor:
+                                      index != messageProvider.userToSelected
+                                          ? Colors.transparent
+                                          : Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.2),
                                   onTap: () {
                                     setState(() {
-                                      selectedIndex = index;
-                                      selectedPatient =
-                                          _patients[index].author.id;
                                       messageProvider.updateUserTo(
-                                          selectedPatient,
-                                          _patients[index].author.firstName,
-                                          _patients[index].author.lastName,
-                                          _patients[index].author.imageData);
+                                          messageProvider
+                                              .contacts[index].author.id,
+                                          index,
+                                          messageProvider
+                                              .contacts[index].author.firstName,
+                                          messageProvider
+                                              .contacts[index].author.lastName,
+                                          messageProvider.contacts[index].author
+                                              .imageData);
                                       messageProvider.updateMessages();
                                     });
                                   },
-                                  title: _patients[index].lastMessage != null
+                                  title: messageProvider
+                                              .contacts[index].lastMessage !=
+                                          null
                                       ? Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -217,17 +225,17 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                                               CrossAxisAlignment.stretch,
                                           children: [
                                             Text(
-                                              "${_patients[index].author.firstName} ${_patients[index].author.lastName}",
+                                              "${messageProvider.contacts[index].author.firstName} ${messageProvider.contacts[index].author.lastName}",
                                               textAlign: TextAlign.left,
                                               style: GoogleFonts.nunito(
                                                 color: Theme.of(context)
                                                     .primaryColorDark,
-                                                fontWeight: FontWeight.w700,
+                                                fontWeight: FontWeight.w800,
                                                 fontSize: 14,
                                               ),
                                             ),
                                             Text(
-                                              "${_patients[index].lastMessage}",
+                                              "${messageProvider.contacts[index].lastMessage}",
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.left,
                                               style: GoogleFonts.nunito(
@@ -239,7 +247,7 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                                           ],
                                         )
                                       : Text(
-                                          "${_patients[index].author.firstName} ${_patients[index].author.lastName}",
+                                          "${messageProvider.contacts[index].author.firstName} ${messageProvider.contacts[index].author.lastName}",
                                           style: GoogleFonts.nunito(
                                             color: Theme.of(context)
                                                 .primaryColorDark,
@@ -247,24 +255,34 @@ class _MessageView extends State<MessageView> with TickerProviderStateMixin {
                                             fontSize: 14,
                                           ),
                                         ),
-                                  leading:
-                                      _patients[index].author.imageData == null
-                                          ? const CircleAvatar(
-                                              child: ClipOval(
-                                                child: Icon(Icons.person),
-                                              ),
-                                            )
-                                          : CircleAvatar(
-                                              //TODO GET IMAGE FROM USER
-                                              backgroundImage: (_patientsImages[index] as Image).image
-                                                  
-                                            ),
-                                  trailing: _patients[index].lastDateMessage !=
+                                  leading: messageProvider.contacts[index]
+                                              .author.imageData ==
+                                          null
+                                      ? CircleAvatar(
+                                          backgroundColor:
+                                              Theme.of(context).primaryColor,
+                                          foregroundColor: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                          child: ClipOval(
+                                            child: Icon(Icons.person),
+                                          ),
+                                        )
+                                      : CircleAvatar(
+                                          //TODO GET IMAGE FROM USER
+                                          backgroundImage: (messageProvider
+                                                      .contactsImages[index]
+                                                  as Image)
+                                              .image),
+                                  trailing: messageProvider.contacts[index]
+                                              .lastDateMessage !=
                                           null
                                       ? Text(
                                           DateFormat('dd/MM/yyyy HH:mm').format(
-                                              _patients[index].lastDateMessage
-                                                  as DateTime),
+                                              (messageProvider.contacts[index]
+                                                          .lastDateMessage
+                                                      as DateTime)
+                                                  .subtract(
+                                                      const Duration(hours: 3))),
                                           style: GoogleFonts.nunito(
                                               color: Colors.grey.shade500,
                                               fontSize: 10,

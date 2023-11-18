@@ -92,7 +92,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
     if (result != null) {
       await _addExercise(widget.idPatient).then((value) {
         showToast(
-          " Ejercicio agregado exitosamente",
+          "Práctica agregada exitosamente",
           textPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
           position: ToastPosition.bottom,
           backgroundColor: Colors.greenAccent.shade700,
@@ -108,7 +108,7 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
         });
       },
           onError: (error) =>
-              Param.showSuccessToast("Error al agregar ejercicio $error"));
+              Param.showSuccessToast("Error al agregar práctica $error"));
     }
   }
 
@@ -179,128 +179,116 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                   ),
                 ],
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Card(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    elevation: 6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(36.0),
-                          child: FutureBuilder<List<Task>>(
-                            future: _fetchData,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Container(
-                                    key: Key('loading'),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.7,
-                                    child: Center(
-                                        child: CircularProgressIndicator()));
-                              } else if (snapshot.hasError) {
-                                return Expanded(
-                                  child: Center(
-                                    child: Container(
-                                      key: Key('box'),
-                                      constraints: BoxConstraints(
-                                          minHeight: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.5),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Lottie.asset(
-                                            'assets/animations/NoResults.json',
-                                            controller: _controller,
-                                            onLoaded: (composition) {
-                                              _controller
-                                                ..duration =
-                                                    composition.duration
-                                                ..repeat();
-                                            },
-                                            width:
-                                                250, // Ajusta el ancho de la animación según tus necesidades
-                                            height:
-                                                250, // Ajusta el alto de la animación según tus necesidades
-                                          ),
-                                          const SizedBox(
-                                              height:
-                                                  50), // Espacio entre la animación y el texto
-                                          Text(
-                                            "Ha ocurrido un error inesperado: 'Error: ${snapshot.error}",
-                                            style: GoogleFonts.nunito(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              if (snapshot.data != null &&
-                                  snapshot.data!.isEmpty) {
-                                return Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Lottie.asset(
-                                        'assets/animations/NoResultsBox.json',
-                                        controller: _controller,
-                                        onLoaded: (composition) {
-                                          _controller
-                                            ..duration = composition.duration
-                                            ..repeat();
-                                        },
-                                        width:
-                                            200, // Ajusta el ancho de la animación según tus necesidades
-                                        height:
-                                            200, // Ajusta el alto de la animación según tus necesidades
-                                      ),
-                                      const SizedBox(
-                                          height:
-                                              50), // Espacio entre la animación y el texto
-                                      Text(
-                                        "El paciente aún no posee ejercicios asignados",
-                                        style: GoogleFonts.nunito(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: Theme.of(context)
-                                              .primaryColorDark,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return Column(
+              Card(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                elevation: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(36.0),
+                      child: FutureBuilder<List<Task>>(
+                        future: _fetchData,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container(
+                                key: Key('loading'),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                child:
+                                    Center(child: CircularProgressIndicator()));
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Container(
+                                key: Key('box'),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Text(
-                                        "Listado de Ejercicios Asignados - Fonema: ${phonemeData.namePhoneme}",
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontFamily: 'IkkaRounded',
-                                            fontSize: 18),
+                                    Lottie.asset(
+                                      'assets/animations/NoResults.json',
+                                      controller: _controller,
+                                      onLoaded: (composition) {
+                                        _controller
+                                          ..duration = composition.duration
+                                          ..repeat();
+                                      },
+                                      width:
+                                          250, // Ajusta el ancho de la animación según tus necesidades
+                                      height:
+                                          250, // Ajusta el alto de la animación según tus necesidades
+                                    ),
+                                    const SizedBox(
+                                        height:
+                                            50), // Espacio entre la animación y el texto
+                                    Text(
+                                      "Ha ocurrido un error inesperado: 'Error: ${snapshot.error}",
+                                      style: GoogleFonts.nunito(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color:
+                                            Theme.of(context).primaryColorDark,
                                       ),
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          if (snapshot.data != null && snapshot.data!.isEmpty) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Lottie.asset(
+                                    'assets/animations/NoResultsBox.json',
+                                    controller: _controller,
+                                    onLoaded: (composition) {
+                                      _controller
+                                        ..duration = composition.duration
+                                        ..repeat();
+                                    },
+                                    width:
+                                        200, // Ajusta el ancho de la animación según tus necesidades
+                                    height:
+                                        200, // Ajusta el alto de la animación según tus necesidades
+                                  ),
+                                  const SizedBox(
                                       height:
-                                          MediaQuery.of(context).size.height *
-                                              0.7,
+                                          50), // Espacio entre la animación y el texto
+                                  Text(
+                                    "El paciente aún no posee prácticas asignadas",
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Text(
+                                      "Listado de Prácticas Asignadas - Fonema: ${phonemeData.namePhoneme}",
+                                      style: GoogleFonts.nunito(
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.4,
+                                    child: SingleChildScrollView(
                                       child: DataTable(
                                         columns: const [
                                           DataColumn(label: Text('Categoria')),
@@ -362,20 +350,21 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                                         }).toList(),
                                       ),
                                     ),
-                                  ],
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: FloatingActionButton(
+                  tooltip: "Asignar práctica",
                   onPressed: _openDialogAddExercise,
                   backgroundColor: Theme.of(context).primaryColor,
                   child: const Icon(
@@ -404,11 +393,11 @@ class RemoveExerciseDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
-        'Eliminar Ejercicio',
-        style: TextStyle(
-            fontFamily: 'IkkaRounded',
+        'Eliminar Práctica',
+        style: GoogleFonts.nunito(
             fontSize: 24,
-            color: Theme.of(context).primaryColor),
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w700),
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 20),
       content: Builder(builder: (context) {
@@ -421,7 +410,7 @@ class RemoveExerciseDialog extends StatelessWidget {
           child: const Column(
             children: [
               Text(
-                  "Si confirmas la acción, el ejercicio asignado quedará eliminado permanentemente"),
+                  "Si confirmas la acción, la práctica asignada quedará eliminada permanentemente"),
             ],
           ),
         );
@@ -432,7 +421,7 @@ class RemoveExerciseDialog extends StatelessWidget {
             await _removeExercise(idTask);
             Navigator.of(context).pop(true);
             showToast(
-              "Ejercicio eliminado con éxito",
+              "Práctica eliminada con éxito",
               textPadding:
                   const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               position: ToastPosition.bottom,
@@ -469,75 +458,98 @@ class RemoveExerciseDialog extends StatelessWidget {
   }
 }
 
-class AddExerciseDialog extends StatelessWidget {
+class AddExerciseDialog extends StatefulWidget {
   final int idPatient;
   final String namePhoneme;
 
-  AddExerciseDialog(
-      {super.key, required this.idPatient, required this.namePhoneme});
+  AddExerciseDialog({
+    Key? key,
+    required this.idPatient,
+    required this.namePhoneme,
+  }) : super(key: key);
+
+  @override
+  _AddExerciseDialogState createState() => _AddExerciseDialogState();
+}
+
+class _AddExerciseDialogState extends State<AddExerciseDialog> {
+  final levels = ['Inicial', 'Intermedio', 'Final'];
+  String selectedCategory = '';
+  int selectedLevel = -1;
+
+  bool checkFieldsCompletion() {
+    return selectedCategory.isNotEmpty && selectedLevel != -1;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final levels = ['Inicial', 'Intermedio', 'Final'];
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
-        'Agregar Ejercicio',
-        style: TextStyle(
-            fontFamily: 'IkkaRounded',
-            fontSize: 24,
-            color: Theme.of(context).primaryColor),
+        'Agregar Práctica',
+        style: GoogleFonts.nunito(
+          fontSize: 24,
+          color: Theme.of(context).primaryColor,
+          fontWeight: FontWeight.w800
+        ),
       ),
       contentPadding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-      content: Builder(builder: (context) {
-        var height = MediaQuery.of(context).size.height;
-        var width = MediaQuery.of(context).size.width;
-
-        return Container(
-          height: height - 400,
-          width: width - 800,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 50,
-                width: 500,
-              ),
-              CustomDropdownButton(
-                options: [namePhoneme],
-                label: 'Fonéma',
-                onChanged: null,
-                errorMessage: null,
-                value: namePhoneme,
-              ),
-              const SizedBox(height: 30),
-              CustomDropdownButton(
-                options: const ['Silabas', 'Palabras', 'Frases'],
-                label: 'Categoria',
-                onChanged: (value) {
-                  context.read<ExerciseProvider>().setCategories = [
-                    Param.getCategoryFromDescription(value as String)
-                  ];
-                },
-                errorMessage: null,
-              ),
-              const SizedBox(height: 30),
-              CustomDropdownButton(
-                options: const ['Inicial', 'Intermedio', 'Final'],
-                label: 'Nivel',
-                onChanged: (value) {
-                  context.read<ExerciseProvider>().setLevel =
-                      levels.indexOf(value as String) + 1;
-                },
-                errorMessage: null,
-              ),
-            ],
-          ),
-        );
-      }),
+      content: Container(
+        height: height - 400,
+        width: width - 800,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+              width: 500,
+            ),
+            CustomDropdownButton(
+              options: [widget.namePhoneme],
+              label: 'Fonéma',
+              onChanged: null,
+              errorMessage: null,
+              value: widget.namePhoneme,
+            ),
+            const SizedBox(height: 30),
+            CustomDropdownButton(
+              options: const ['Silabas', 'Palabras', 'Frases'],
+              label: 'Categoria',
+              onChanged: (value) {
+                setState(() {
+                  selectedCategory = value as String;
+                });
+                context.read<ExerciseProvider>().setCategories = [
+                  Param.getCategoryFromDescription(value as String)
+                ];
+              },
+              errorMessage: null,
+            ),
+            const SizedBox(height: 30),
+            CustomDropdownButton(
+              options: const ['Inicial', 'Intermedio', 'Final'],
+              label: 'Nivel',
+              onChanged: (value) {
+                setState(() {
+                  selectedLevel = levels.indexOf(value as String) + 1;
+                });
+                context.read<ExerciseProvider>().setLevel =
+                    levels.indexOf(value as String) + 1;
+              },
+              errorMessage: null,
+            ),
+          ],
+        ),
+      ),
       actions: [
         TextButton(
-          onPressed: () async {
-            Navigator.of(context).pop(true);
-          },
+          onPressed: checkFieldsCompletion()
+              ? () async {
+                  Navigator.of(context).pop(true);
+                }
+              : null,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color?>(
               (Set<MaterialState> states) {
@@ -550,11 +562,16 @@ class AddExerciseDialog extends StatelessWidget {
           ),
           child: Text(
             'Guardar',
-            style: TextStyle(color: colorList[4]),
+            style: TextStyle(
+              color: checkFieldsCompletion()
+                  ? colorList[4]
+                  : Colors.grey.shade400,
+            ),
           ),
         ),
         TextButton(
           onPressed: () {
+            context.read<ExerciseProvider>().refreshData();
             Navigator.of(context).pop(); // Close the dialog
           },
           child: Text('Cancelar'),

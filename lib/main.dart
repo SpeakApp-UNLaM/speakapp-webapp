@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_app_web/presentations/screens/message_section/message_provider.dart';
 import 'package:speak_app_web/providers/exercise_provider.dart';
+import 'package:speak_app_web/providers/patient_provider.dart';
 import 'package:speak_app_web/providers/play_audio_provider.dart';
 import 'package:speak_app_web/providers/report_provider.dart';
 import 'config/api.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ExerciseProvider()),
         ChangeNotifierProvider(create: (_) => MessageProvider()),
         ChangeNotifierProvider(create: (_) => ReportProvider()),
+        ChangeNotifierProvider(create: (_) => PatientProvider()),
         Provider<AppRouter>(
           lazy: false,
           create: (BuildContext createContext) => AppRouter(authProvider),

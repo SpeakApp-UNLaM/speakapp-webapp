@@ -95,7 +95,7 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
                       const SizedBox(
                           height: 50), // Espacio entre la animación y el texto
                       Text(
-                        "El paciente aún no ha resuelto ejercicios",
+                        "El paciente aún no ha resuelto prácticas",
                         style: GoogleFonts.nunito(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -120,7 +120,6 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
                   dataRowMaxHeight: 100,
                   columns: const [
                     DataColumn(label: Text('Fonema')),
-                    DataColumn(label: Text('Ejercicios finalizados')),
                     DataColumn(label: Text('Acción')),
                   ],
                   rows: _finishedTasks.map((task) {
@@ -130,16 +129,6 @@ class ListFinishedExercisesState extends State<ListFinishedExercises>
                         child: ButtonStaticPhoneme(
                           idPhoneme: task.idPhoneme,
                           namePhoneme: task.namePhoneme,
-                        ),
-                      )),
-                      DataCell(Container(
-                        // Espaciado vertical
-                        child: Text(
-                          '1',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.nunito(
-                              color: Theme.of(context).primaryColorDark,
-                              fontWeight: FontWeight.w700),
                         ),
                       )),
                       DataCell(Container(
@@ -187,30 +176,39 @@ class ButtonStaticPhoneme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      width: 70,
-      decoration: BoxDecoration(
-        color: colorList[0],
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
-        ),
+    return PhysicalModel(
+      color: colorList[2],
+      shadowColor: colorList[2],
+      elevation: 12,
+      shape: BoxShape.rectangle,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(8),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(namePhoneme.replaceAll("CONSONANTICA", "").trim(),
-              style: GoogleFonts.nunito(
-                  fontSize: 24,
-                  color: colorList[2],
-                  fontWeight: FontWeight.w900)),
-          if (namePhoneme.length > 3)
-            Text("Consonántica",
+      child: Container(
+        height: 70,
+        width: 70,
+        decoration: BoxDecoration(
+          color: colorList[0],
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(namePhoneme.replaceAll("CONSONANTICA", "").trim(),
                 style: GoogleFonts.nunito(
-                    fontSize: 8,
+                    fontSize: 24,
                     color: colorList[2],
-                    fontWeight: FontWeight.w900))
-        ],
+                    fontWeight: FontWeight.w900)),
+            if (namePhoneme.length > 3)
+              Text("Consonántica",
+                  style: GoogleFonts.nunito(
+                      fontSize: 8,
+                      color: colorList[2],
+                      fontWeight: FontWeight.w900))
+          ],
+        ),
       ),
     );
   }

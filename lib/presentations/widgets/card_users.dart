@@ -1,10 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/models/patient_model.dart';
+import 'package:speak_app_web/providers/patient_provider.dart';
 
 import '../../config/theme/app_theme.dart';
 
@@ -50,17 +54,35 @@ class CardUserState extends State<CardUser>
     super.dispose();
   }
 
+  void _openDialogRemovePatient(int idPatient) async {
+    final result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RemovePatientDialog(
+          idPatient: idPatient,
+        ); // Replace MyDialogWidget with your custom dialog content
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        _fetchData = fetchData();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context)
-          .size
-          .width, // Ocupa todo el ancho de la pantalla
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height *
+          0.7, // Ocupa todo el ancho de la pantalla
       margin: const EdgeInsets.all(30.0),
       child: Card(
         color: Theme.of(context).cardColor,
-        elevation: 5,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        elevation: 10,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Column(
           children: [
             Container(
@@ -95,14 +117,22 @@ class CardUserState extends State<CardUser>
                 future: _fetchData,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(
+                        child: Container(
+                            key: Key('loading'),
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: Column(
+                              children: [
+                                Spacer(),
+                                CircularProgressIndicator(),
+                                Spacer(),
+                              ],
+                            )));
                   } else if (snapshot.hasError) {
                     return Center(
                       child: Container(
                         key: Key('no-results'),
-                        constraints: BoxConstraints(
-                            minHeight:
-                                MediaQuery.of(context).size.height * 0.5),
+                        height: MediaQuery.of(context).size.height * 0.5,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -139,9 +169,7 @@ class CardUserState extends State<CardUser>
                     return Center(
                       child: Container(
                         key: Key('box'),
-                        constraints: BoxConstraints(
-                            minHeight:
-                                MediaQuery.of(context).size.height * 0.5),
+                        height: MediaQuery.of(context).size.height * 0.5,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -177,17 +205,38 @@ class CardUserState extends State<CardUser>
                     return SingleChildScrollView(
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height - 400,
+                        height: MediaQuery.of(context).size.height * 0.5,
                         child: DataTable(
                           columns: const [
+                            DataColumn(label: Text('')),
                             DataColumn(label: Text('Nombre')),
                             DataColumn(label: Text('Apellido')),
                             DataColumn(label: Text('Edad')),
                             DataColumn(label: Text('Email')),
                             DataColumn(label: Text('')),
+                            DataColumn(label: Text('')),
                           ],
                           rows: _patientsList.map((patient) {
                             return DataRow(cells: [
+                              DataCell(
+                                patient.imageData == null
+                                    ? CircleAvatar(
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                        foregroundColor: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        radius: 18,
+                                        child: ClipOval(
+                                          child: Icon(Icons.person),
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 18,
+                                        //TODO GET IMAGE FROM USER
+                                        backgroundImage:
+                                            (patient.imageData as Image)
+                                                .image),
+                              ),
                               DataCell(
                                 Text(
                                   '${patient.firstName}',
@@ -253,6 +302,19 @@ class CardUserState extends State<CardUser>
                                   ),
                                 ),
                               ),
+                              DataCell(
+                                IconButton(
+                                  tooltip: "Desvincular paciente",
+                                  color: Colors.grey.shade600,
+                                  onPressed: () {
+                                    _openDialogRemovePatient(
+                                        patient.idPatient);
+                                  },
+                                  icon: const Icon(
+                                    Icons.person_remove,
+                                  ),
+                                ),
+                              ),
                             ]);
                           }).toList(),
                         ),
@@ -263,6 +325,85 @@ class CardUserState extends State<CardUser>
           ],
         ),
       ),
+    );
+  }
+}
+
+class RemovePatientDialog extends StatelessWidget {
+  final int idPatient;
+  RemovePatientDialog({super.key, required this.idPatient});
+  @override
+  Widget build(BuildContext context) {
+    Future<Response> _removePatient(int id) async {
+      final result = await context.read<PatientProvider>().removePatient(id);
+      return result;
+    }
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: Text(
+        'Eliminar Práctica',
+        style: GoogleFonts.nunito(
+            fontSize: 24,
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w700),
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+      content: Builder(builder: (context) {
+        var height = MediaQuery.of(context).size.height;
+        var width = MediaQuery.of(context).size.width;
+
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.2,
+          width: MediaQuery.of(context).size.width * 0.3,
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text("Si confirmas la acción, el paciente quedará desvinculado"),
+            ],
+          ),
+        );
+      }),
+      actions: [
+        TextButton(
+          onPressed: () async {
+            await _removePatient(idPatient);
+            Navigator.of(context).pop(true);
+            showToast(
+              "Paciente desvinculado con éxito",
+              textPadding:
+                  const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              position: ToastPosition.bottom,
+              backgroundColor: Colors.greenAccent.shade700,
+              radius: 8.0,
+              textStyle:
+                  GoogleFonts.nunito(fontSize: 16.0, color: Colors.white),
+              duration: const Duration(seconds: 5),
+            );
+          },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return Colors.redAccent.shade100;
+                }
+                return null; // Use the component's default.
+              },
+            ),
+          ),
+          child: Text(
+            'Desvincular',
+            style: TextStyle(color: Colors.orangeAccent),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text('Cancelar'),
+        ),
+      ],
     );
   }
 }

@@ -35,6 +35,14 @@ class ExerciseProvider extends ChangeNotifier {
     data.categories = cat;
   }
 
+  bool checkFielsCompletion() {
+    if (data.phonemeId != 0 && data.level != null && data.categories.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  }
+
   void refreshData() {
     data = ExerciseData(phonemeId: 0, level: null, categories: []);
   }
