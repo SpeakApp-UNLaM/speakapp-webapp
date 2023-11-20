@@ -152,7 +152,7 @@ class _TabBarPatientState extends State<TabBarPatient>
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                "Sexo: Masculino",
+                                                "Sexo: ${patient.gender != null ? (patient.gender == 'M' ? 'Masculino' : 'Femenino') : 'No especificado' }",
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .primaryColor,

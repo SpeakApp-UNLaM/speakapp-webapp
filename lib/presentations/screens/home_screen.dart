@@ -2,15 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
+import 'package:speak_app_web/providers/auth_provider.dart';
 import 'package:speak_app_web/providers/login_provider.dart';
 
 import '../widgets/text_primary.dart';
 
 enum SampleItem { config, logOut }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final Widget child;
-  const HomeScreen({super.key, required this.child});
+  const HomeScreen({Key? key, required this.child}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isPatientsSelected = true; // Variable para controlar la selección
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +79,36 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ],
-            child: const CircleAvatar(
-              backgroundImage: NetworkImage(
-                "https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*",
-              ),
-            ),
+            child: context.read<AuthProvider>().loggedUser.imageData == null
+                                      ? PhysicalModel(
+                                          color: Theme.of(context).primaryColor,
+                                          shadowColor: Theme.of(context).primaryColor,
+                                          elevation: 12,
+                                          shape: BoxShape.circle,
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: Theme.of(context)
+                                                .scaffoldBackgroundColor,
+                                            foregroundColor:
+                                                Theme.of(context).primaryColor,
+                                            child: const ClipOval(
+                                              child:
+                                                  Icon(Icons.person, size: 30),
+                                            ),
+                                          ),
+                                        )
+                                      : PhysicalModel(
+                                          color: Theme.of(context).primaryColor,
+                                          shape: BoxShape.circle,
+                                          shadowColor: Theme.of(context).primaryColor,
+                                          elevation: 12,
+                                          child: CircleAvatar(
+                                              radius: 20,
+                                              //TODO GET IMAGE FROM USER
+                                              backgroundImage:
+                                                  (context.read<AuthProvider>().loggedUser.imageData as Image)
+                                                      .image),
+                                        ),
           ),
           SizedBox(width: 30)
         ],
@@ -90,22 +123,65 @@ class HomeScreen extends StatelessWidget {
             ),
             const Spacer(),
             TextButton.icon(
-              onPressed: () => context.go('/patients'),
-              icon:
-                  const Icon(Icons.supervised_user_circle, color: Colors.white),
-              label: const TextPrimary(text: 'Pacientes', color: Colors.white),
+              onPressed: () {
+                setState(() {
+                  _isPatientsSelected = true; // Actualiza la selección
+                });
+                context.go('/patients');
+              },
+              icon: Icon(Icons.supervised_user_circle),
+              label: Text(
+                'Pacientes',
+                style: TextStyle(
+                  fontFamily: 'IkkaRounded',
+                  fontSize: 20,
+                  color: Colors.white,
+                  shadows: _isPatientsSelected
+                      ? [
+                          Shadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 10,
+                            color: Colors.white.withOpacity(
+                                0.8), // Color y opacidad de la sombra
+                          ),
+                        ]
+                      : null,
+                ),
+              ),
             ),
             const SizedBox(width: 30),
             TextButton.icon(
-              onPressed: () => context.go('/message_view'),
-              icon: const Icon(Icons.message, color: Colors.white),
-              label: const TextPrimary(text: 'Mensajes', color: Colors.white),
+              onPressed: () {
+                setState(() {
+                  _isPatientsSelected = false; // Actualiza la selección
+                });
+                context.go('/message_view');
+              },
+              icon: Icon(Icons.message),
+              label: Text(
+                'Mensajes',
+                style: TextStyle(
+                  fontFamily: 'IkkaRounded',
+                  fontSize: 20,
+                  color: Colors.white,
+                  shadows: !_isPatientsSelected
+                      ? [
+                          Shadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 8,
+                            color: Colors.white.withOpacity(
+                                0.8), // Color y opacidad de la sombra
+                          ),
+                        ]
+                      : null,
+                ),
+              ),
             ),
             const Spacer()
           ],
         ),
       ),
-      body: child,
+      body: widget.child,
     );
   }
 }

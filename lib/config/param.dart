@@ -29,6 +29,7 @@ class Param {
   static const getPending = "/pending/1";
   static const getGroupExercises = "/groupExercises";
   static const getPatients = "/patients";
+  static const getProfessionals = "/professionals";
   static const getPhonemes = "/phonemes";
   static const getRfi = "/rfi";
   static const getResolvedExercises = "/resolve-exercises";

@@ -23,11 +23,15 @@ class CardUser extends StatefulWidget {
 
 class CardUserState extends State<CardUser>
     with SingleTickerProviderStateMixin {
-  final List<PatientModel> _patientsList = [];
+  List<PatientModel> _patientsList = [];
+
   Future? _fetchData;
   late final AnimationController _controller;
+  late final TextEditingController _searchController;
+  String _searchQuery = '';
 
   Future fetchData() async {
+    _patientsList = [];
     final response = await Api.get(Param.getPatients);
 
     for (var element in response.data) {
@@ -44,6 +48,9 @@ class CardUserState extends State<CardUser>
       duration: Duration(seconds: 1),
     );
 
+    _searchController = TextEditingController();
+    _searchController.addListener(_onSearchChanged);
+
     super.initState();
     _fetchData = fetchData();
   }
@@ -51,6 +58,8 @@ class CardUserState extends State<CardUser>
   @override
   void dispose() {
     _controller.dispose();
+    _searchController.dispose();
+
     super.dispose();
   }
 
@@ -71,6 +80,23 @@ class CardUserState extends State<CardUser>
     }
   }
 
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text;
+    });
+  }
+
+  List<PatientModel> get _filteredPatientsList {
+    if (_searchQuery.isEmpty) {
+      return _patientsList;
+    } else {
+      return _patientsList.where((patient) {
+        final fullName = '${patient.firstName} ${patient.lastName}';
+        return fullName.toLowerCase().contains(_searchQuery.toLowerCase());
+      }).toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -81,8 +107,7 @@ class CardUserState extends State<CardUser>
       child: Card(
         color: Theme.of(context).cardColor,
         elevation: 10,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Column(
           children: [
             Container(
@@ -93,6 +118,7 @@ class CardUserState extends State<CardUser>
               padding: const EdgeInsets.all(23),
               child: Center(
                 child: SearchBar(
+                    controller: _searchController,
                     side: MaterialStateProperty.all(
                         BorderSide(color: Theme.of(context).primaryColor)),
                     hintText: 'Buscar paciente',
@@ -164,8 +190,8 @@ class CardUserState extends State<CardUser>
                         ),
                       ),
                     );
-                  } else if (snapshot.data != null &&
-                      (snapshot.data.data).length == 0) {
+                  } else if ((snapshot.data != null &&
+                      (snapshot.data.data).length == 0) || _filteredPatientsList.isEmpty) {
                     return Center(
                       child: Container(
                         key: Key('box'),
@@ -216,7 +242,7 @@ class CardUserState extends State<CardUser>
                             DataColumn(label: Text('')),
                             DataColumn(label: Text('')),
                           ],
-                          rows: _patientsList.map((patient) {
+                          rows: _filteredPatientsList.map((patient) {
                             return DataRow(cells: [
                               DataCell(
                                 patient.imageData == null
@@ -234,8 +260,7 @@ class CardUserState extends State<CardUser>
                                         radius: 18,
                                         //TODO GET IMAGE FROM USER
                                         backgroundImage:
-                                            (patient.imageData as Image)
-                                                .image),
+                                            (patient.imageData as Image).image),
                               ),
                               DataCell(
                                 Text(
@@ -307,8 +332,7 @@ class CardUserState extends State<CardUser>
                                   tooltip: "Desvincular paciente",
                                   color: Colors.grey.shade600,
                                   onPressed: () {
-                                    _openDialogRemovePatient(
-                                        patient.idPatient);
+                                    _openDialogRemovePatient(patient.idPatient);
                                   },
                                   icon: const Icon(
                                     Icons.person_remove,
@@ -342,7 +366,7 @@ class RemovePatientDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
-        'Eliminar Práctica',
+        'Desvincular Paciente',
         style: GoogleFonts.nunito(
             fontSize: 24,
             color: Theme.of(context).primaryColor,

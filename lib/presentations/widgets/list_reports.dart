@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -250,7 +251,12 @@ class ListReportsState extends State<ListReports>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text( DateTime.parse(item.createdAt).toString(),
+                                  Text(
+                                      DateFormat('dd/MM/yyyy HH:mm')
+                                          .format(
+                                              (DateTime.parse(item.createdAt))
+                                                  .subtract(Duration(hours: 3)))
+                                          .toString(),
                                       style: GoogleFonts.nunito(
                                           color: Colors.grey.shade500,
                                           fontSize: 14,
@@ -324,6 +330,11 @@ class _ReportDialogState extends State<ReportDialog> {
     }
   }
 
+  bool checkFieldsCompletion() {
+    return context.read<ReportProvider>().title.isNotEmpty &&
+        context.read<ReportProvider>().body.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -331,7 +342,7 @@ class _ReportDialogState extends State<ReportDialog> {
       title: Column(
         children: [
           Text(
-            'Nuevo Informe',
+            widget.report != null ? 'Editar Informe' : 'Nuevo Informe',
             style: TextStyle(
               fontFamily: 'IkkaRounded',
               fontSize: 20,
@@ -356,6 +367,7 @@ class _ReportDialogState extends State<ReportDialog> {
                   initialValue: widget.report?.title ?? "",
                   onChanged: (value) {
                     context.read<ReportProvider>().setTitle = value;
+                    setState(() => {});
                   }),
               const SizedBox(height: 30),
               CustomTextAreaFormField(
@@ -363,6 +375,7 @@ class _ReportDialogState extends State<ReportDialog> {
                   initialValue: widget.report?.body ?? "",
                   onChanged: (value) {
                     context.read<ReportProvider>().setBody = value;
+                    setState(() => {});
                   })
             ],
           ),
@@ -370,9 +383,11 @@ class _ReportDialogState extends State<ReportDialog> {
       }),
       actions: [
         TextButton(
-          onPressed: () async {
-            Navigator.of(context).pop(true);
-          },
+          onPressed: checkFieldsCompletion()
+              ? () async {
+                  Navigator.of(context).pop(true);
+                }
+              : null,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color?>(
               (Set<MaterialState> states) {
@@ -385,7 +400,10 @@ class _ReportDialogState extends State<ReportDialog> {
           ),
           child: Text(
             'Guardar',
-            style: TextStyle(color: colorList[4]),
+            style: TextStyle(
+              color:
+                  checkFieldsCompletion() ? colorList[4] : Colors.grey.shade400,
+            ),
           ),
         ),
         TextButton(
@@ -414,8 +432,7 @@ class RemoveReportDialog extends StatelessWidget {
       title: Text(
         'Eliminar Informe',
         style: GoogleFonts.nunito(
-            fontSize: 24,
-            color: Theme.of(context).primaryColor),
+            fontSize: 24, color: Theme.of(context).primaryColor),
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 20),
       content: Builder(builder: (context) {

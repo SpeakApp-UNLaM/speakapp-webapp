@@ -51,6 +51,7 @@ class CustomTextAreaFormField extends StatelessWidget {
         ]
       ),
       child: TextFormField(
+        maxLines: null,
         onChanged: onChanged,
         validator: validator,
         obscureText: obscureText,

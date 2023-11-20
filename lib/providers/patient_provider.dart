@@ -10,7 +10,7 @@ class PatientProvider extends ChangeNotifier {
 
 
   Future<Response> removePatient(int id) async {
-    Response response = await Api.delete("${Param.getPatients}/$id");
+    Response response = await Api.put("${Param.getProfessionals}/unlink/$id");
 
     return response;
   }

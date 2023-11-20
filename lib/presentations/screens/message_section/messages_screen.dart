@@ -27,11 +27,9 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
   late MessageProvider messageProvider;
 
   final List<types.Message> _messages = [];
-  late Timer _timer;
   late final _user;
   int userId = 0;
   @override
@@ -49,7 +47,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 

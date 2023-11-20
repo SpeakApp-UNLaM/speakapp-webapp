@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
 class User {
   int userId;
   String username;
@@ -9,6 +13,7 @@ class User {
   String type;
   String token;
   String renewalToken;
+  Image? imageData;
 
   User(
       {required this.userId,
@@ -19,7 +24,8 @@ class User {
       required this.phone,
       required this.type,
       required this.token,
-      required this.renewalToken});
+      required this.renewalToken,
+      this.imageData});
 
   factory User.fromJson(Map<String, dynamic> responseData) {
     return User(
@@ -31,6 +37,8 @@ class User {
         phone: responseData['phone'],
         type: responseData['type'],
         token: responseData['access_token'],
-        renewalToken: responseData['renewal_token']);
+        renewalToken: responseData['renewal_token'], 
+        imageData: responseData["imageData"] != null ? Image.memory(base64.decode(responseData["imageData"]),
+                                                fit: BoxFit.cover) : null);
   }
 }

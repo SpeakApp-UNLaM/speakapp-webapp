@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -105,7 +106,9 @@ class AuthProvider with ChangeNotifier {
           phone: '11311984311',
           type: responseData['type'],
           token: responseData['token'],
-          renewalToken: responseData['token']);
+          renewalToken: responseData['token'],
+          imageData: responseData["imageData"] != null ? Image.memory(base64.decode(responseData["imageData"]),
+                                                fit: BoxFit.cover) : null);
 
       _loggedUser = authUser;
       await UserPreferences().saveUser(authUser);

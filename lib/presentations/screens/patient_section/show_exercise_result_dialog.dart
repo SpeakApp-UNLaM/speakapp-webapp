@@ -93,6 +93,21 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
     _fetchData = fetchData();
   }
 
+  String quitarDiacriticos(String palabra) {
+    var conDiacriticos = 'áéíóúüÁÉÍÓÚÜ'; // Caracteres con diacríticos
+    var sinDiacriticos = 'aeiouuAEIOUU'; // Caracteres sin diacríticos
+
+    var result = '';
+
+    for (int i = 0; i < palabra.length; i++) {
+      var character = palabra.characters.elementAt(i);
+      var index = conDiacriticos.indexOf(character);
+      result += index >= 0 ? sinDiacriticos[index] : character;
+    }
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return OKToast(
@@ -272,7 +287,13 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                   DataCell(Container(
                                     // Espaciado vertical
                                     child: resolvedTask.resultExpected != null
-                                        ? Icon(Icons.arrow_forward, color: resolvedTask.resultSelected.contains(resolvedTask.resultExpected ?? '-') ? colorList[4] : Colors.redAccent)
+                                        ? Icon(Icons.arrow_forward,
+                                            color: resolvedTask.resultSelected
+                                                    .contains(resolvedTask
+                                                            .resultExpected ??
+                                                        '-')
+                                                ? colorList[4]
+                                                : Colors.redAccent)
                                         : Text(
                                             "", // Muestra el índice + 1
                                             textAlign: TextAlign.center,
@@ -292,7 +313,8 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                               .toUpperCase()),
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.nunito(
-                                        color: Theme.of(context).primaryColorDark,
+                                        color:
+                                            Theme.of(context).primaryColorDark,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -399,11 +421,11 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                               color: resolvedTask
                                                               .resultExpected !=
                                                           null &&
-                                                      resolvedTask
-                                                          .resultSelected
-                                                          .contains(resolvedTask
+                                                      quitarDiacriticos(resolvedTask
+                                                              .resultSelected)
+                                                          .contains(quitarDiacriticos(resolvedTask
                                                                   .resultExpected
-                                                              as String)
+                                                              as String))
                                                   ? colorList[4]
                                                   : (resolvedTask
                                                               .resultExpected !=
@@ -494,7 +516,7 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "¿Cree que hubo un error en el reconocimiento del audio?",
+                                    "¿Desea cambiar el resultado?",
                                     style: GoogleFonts.nunito(
                                         fontSize: 14,
                                         color: Colors.grey.shade500,
