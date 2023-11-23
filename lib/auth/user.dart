@@ -13,7 +13,7 @@ class User {
   String type;
   String token;
   String renewalToken;
-  Image? imageData;
+  String? imageData;
 
   User(
       {required this.userId,
@@ -38,7 +38,6 @@ class User {
         type: responseData['type'],
         token: responseData['access_token'],
         renewalToken: responseData['renewal_token'], 
-        imageData: responseData["imageData"] != null ? Image.memory(base64.decode(responseData["imageData"]),
-                                                fit: BoxFit.cover) : null);
+        imageData: responseData["imageData"]);
   }
 }

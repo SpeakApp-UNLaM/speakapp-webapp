@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:speak_app_web/config/api.dart';
 import 'package:speak_app_web/config/param.dart';
 import 'package:speak_app_web/models/patient_model.dart';
@@ -64,7 +65,7 @@ class _TabBarPatientState extends State<TabBarPatient>
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Container(
-                          width: 400,
+                          width: 450,
                           child: Card(
                             elevation: 5, // Agregar sombra al card
                             child: Padding(
@@ -87,15 +88,16 @@ class _TabBarPatientState extends State<TabBarPatient>
                                   patient.imageData == null
                                       ? PhysicalModel(
                                           color: Theme.of(context).primaryColor,
-                                          shadowColor: Theme.of(context).primaryColor,
+                                          shadowColor:
+                                              Theme.of(context).primaryColor,
                                           elevation: 12,
                                           shape: BoxShape.circle,
                                           child: CircleAvatar(
                                             radius: 60,
-                                            backgroundColor: Theme.of(context)
-                                                .primaryColor,
-                                            foregroundColor:
-                                                Theme.of(context).scaffoldBackgroundColor,
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
+                                            foregroundColor: Theme.of(context)
+                                                .scaffoldBackgroundColor,
                                             child: const ClipOval(
                                               child:
                                                   Icon(Icons.person, size: 80),
@@ -105,7 +107,8 @@ class _TabBarPatientState extends State<TabBarPatient>
                                       : PhysicalModel(
                                           color: Theme.of(context).primaryColor,
                                           shape: BoxShape.circle,
-                                          shadowColor: Theme.of(context).primaryColor,
+                                          shadowColor:
+                                              Theme.of(context).primaryColor,
                                           elevation: 12,
                                           child: CircleAvatar(
                                               radius: 60,
@@ -146,13 +149,13 @@ class _TabBarPatientState extends State<TabBarPatient>
                                               fontWeight: FontWeight.w800,
                                             ),
                                           ),
-                                          const SizedBox(height: 10),
+                                          const SizedBox(height: 15),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                "Sexo: ${patient.gender != null ? (patient.gender == 'M' ? 'Masculino' : 'Femenino') : 'No especificado' }",
+                                                "Sexo: ${patient.gender != null ? (patient.gender == 'M' ? 'Masculino' : 'Femenino') : 'No especificado'}",
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .primaryColor,
@@ -172,7 +175,7 @@ class _TabBarPatientState extends State<TabBarPatient>
                                               ),
                                             ],
                                           ),
-                                          const SizedBox(height: 10),
+                                          const SizedBox(height: 15),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -197,13 +200,42 @@ class _TabBarPatientState extends State<TabBarPatient>
                                               ),
                                             ],
                                           ),
-                                          const SizedBox(height: 10),
+                                          const SizedBox(height: 15),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                "Tel: 1131984311",
+                                                "Tutor: ${patient.tutor}",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                "Fecha Alta: ${DateFormat('dd/MM/yyyy')
+                                          .format(
+                                              (DateTime.parse(patient.createdAt as String))
+                                                  .subtract(Duration(hours: 3)))
+                                          .toString()} ",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 15),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Tel: ${patient.phone}",
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .primaryColor,
@@ -221,16 +253,6 @@ class _TabBarPatientState extends State<TabBarPatient>
                                                 ),
                                               ),
                                             ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Text(
-                                            "Fecha Alta: 12/08/2023",
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            ),
                                           ),
                                         ],
                                       ),

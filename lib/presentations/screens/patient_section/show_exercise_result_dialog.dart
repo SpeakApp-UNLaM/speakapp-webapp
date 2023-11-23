@@ -89,7 +89,7 @@ class _ShowExerciseResultDialogState extends State<ShowExerciseResultDialog> {
 
   void initState() {
     super.initState();
-
+  
     _fetchData = fetchData();
   }
 

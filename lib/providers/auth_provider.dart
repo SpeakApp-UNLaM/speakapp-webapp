@@ -107,8 +107,7 @@ class AuthProvider with ChangeNotifier {
           type: responseData['type'],
           token: responseData['token'],
           renewalToken: responseData['token'],
-          imageData: responseData["imageData"] != null ? Image.memory(base64.decode(responseData["imageData"]),
-                                                fit: BoxFit.cover) : null);
+          imageData: responseData["imageData"]);
 
       _loggedUser = authUser;
       await UserPreferences().saveUser(authUser);

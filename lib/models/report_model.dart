@@ -10,7 +10,7 @@ class ReportModel {
     required this.title,
     required this.body,
     required this.createdAt,
-    this.isExpanded = false
+    this.isExpanded = true
   });
 
   factory ReportModel.fromJson(Map<String, dynamic> json) => ReportModel(

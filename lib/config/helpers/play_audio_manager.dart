@@ -14,6 +14,12 @@ class PlayAudioManager {
     _audioPlayer = AudioPlayer();
   }
 
+  Future<void> setAudioSource(String base64) async {
+    BufferAudioSource _buffer = BufferAudioSource.fromBase64(base64);
+
+    await _audioPlayer.setAudioSource(_buffer, preload: true);
+  }
+
   Future<void> playAudio(String pathAudio) async {
     isPlaying = true;
     _audioPlayer.setFilePath(pathAudio);
@@ -24,13 +30,16 @@ class PlayAudioManager {
 
   Future<void> playAudioBase64(String base64) async {
     isPlaying = true;
-    BufferAudioSource _buffer = BufferAudioSource.fromBase64(base64);
 
-    await _audioPlayer.setAudioSource(_buffer);
     //_audioPlayer.setFilePath(pathAudio);
     await _audioPlayer.play();
-    await _audioPlayer.seek(Duration.zero);
+    await _audioPlayer.stop();
+
+    await _audioPlayer.seek(Duration.zero, index: 0);
+
     isPlaying = false;
+
+    await setAudioSource(base64);
   }
 
   Future<void> pauseAudio() async {
@@ -75,8 +84,8 @@ class BufferAudioSource extends StreamAudioSource {
         contentLength: end! - start,
         offset: start,
         contentType: 'audio/mpeg',
-        stream:
-            Stream.value(List<int>.from(_buffer!.skip(start).take(end - start))),
+        stream: Stream.value(
+            List<int>.from(_buffer!.skip(start).take(end - start))),
       ),
     );
   }

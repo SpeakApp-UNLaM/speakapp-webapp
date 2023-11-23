@@ -327,7 +327,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     CircularPercentIndicator(
-                                      radius: 40.0,
+                                      radius: 45.0,
                                       lineWidth: 8.0,
                                       animation: true,
                                       percent: _finishedTaskItems
@@ -339,7 +339,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                         "${(_finishedTaskItems.where((element) => element.result == 'SUCCESS').length / _finishedTaskItems.length * 100).toString()}%",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
+                                          fontSize: 14.0,
                                           fontFamily: 'IkkaRounded',
                                           color: colorList[4],
                                         ),
@@ -362,7 +362,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                       width: 50,
                                     ),
                                     CircularPercentIndicator(
-                                      radius: 40.0,
+                                      radius: 45.0,
                                       lineWidth: 8.0,
                                       animation: true,
                                       percent: _finishedTaskItems
@@ -374,7 +374,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                         "${(_finishedTaskItems.where((element) => element.result == 'FAILURE').length / _finishedTaskItems.length * 100).toString()}%",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
+                                          fontSize: 14.0,
                                           fontFamily: 'IkkaRounded',
                                           color: Colors.redAccent,
                                         ),
@@ -436,7 +436,7 @@ class _PhonemeExercisesResultsState extends State<PhonemeExercisesResults>
                                         )),
                                         DataCell(Container(
                                           // Espaciado vertical
-                                          child: Text(
+                                          child: SelectableText(
                                             Param.typeExercisesDescription[
                                                 task.type] as String,
                                             textAlign: TextAlign.center,

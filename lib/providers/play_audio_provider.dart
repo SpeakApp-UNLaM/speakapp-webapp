@@ -8,13 +8,14 @@ class PlayAudioProvider extends ChangeNotifier {
 
   bool get playing => _playing;
 
+/*
   Future<void> playAudio(String base64) async {
     _playing = true;
     notifyListeners();
-    await playManagerAudio.playAudioBase64(base64);
+    await playManagerAudio.playAudioBase64();
     _playing = false;
     notifyListeners();
-  }
+  }*/
 
   Future<void> pauseAudio() async {
     await playManagerAudio.pauseAudio();

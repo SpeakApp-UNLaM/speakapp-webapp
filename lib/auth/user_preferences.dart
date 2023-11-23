@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speak_app_web/auth/user.dart';
 
@@ -16,6 +20,7 @@ class UserPreferences {
     prefs.setString("type", user.type);
     prefs.setString("token", user.token);
     prefs.setString("renewalToken", user.renewalToken);
+    prefs.setString("imageData", user.imageData ?? "");
 
     // ignore: deprecated_member_use
     return prefs.commit();
@@ -33,6 +38,7 @@ class UserPreferences {
     String type = prefs.getString("type") as String;
     String token = prefs.getString("token") as String;
     String renewalToken = prefs.getString("renewalToken") as String;
+    String imageData = prefs.getString("imageData") as String;
 
     return User(
         userId: userId,
@@ -43,7 +49,8 @@ class UserPreferences {
         phone: phone,
         type: type,
         token: token,
-        renewalToken: renewalToken);
+        renewalToken: renewalToken,
+        imageData: imageData);
   }
 
   Future<void> removeUser() async {

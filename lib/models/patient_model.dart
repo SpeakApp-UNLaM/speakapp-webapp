@@ -11,8 +11,11 @@ class PatientModel {
   String email;
   String firstName;
   String lastName;
+  String? tutor;
+  String? phone;
   int? age;
   String? gender;
+  String? createdAt;
   Image? imageData;
 
   PatientModel(
@@ -21,8 +24,11 @@ class PatientModel {
       required this.email,
       required this.firstName,
       required this.lastName,
+      required this.tutor,
+      required this.phone,
       required this.age,
       required this.gender,
+      required this.createdAt,
       this.imageData});
 
   factory PatientModel.fromJson(Map<String, dynamic> json) {
@@ -32,8 +38,11 @@ class PatientModel {
         email: json["email"],
         firstName: json["firstName"],
         lastName: json["lastName"],
+        tutor: json["tutor"],
+        phone: json["phone"],
         age: json["age"],
         gender: json["gender"],
+        createdAt: json["createAt"],
         imageData: json["imageData"] != null ? Image.memory(base64.decode(json["imageData"]),
                                                 fit: BoxFit.cover) : null);
   }

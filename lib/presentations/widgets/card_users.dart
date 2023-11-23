@@ -38,6 +38,8 @@ class CardUserState extends State<CardUser>
       _patientsList.add(PatientModel.fromJson(element));
     }
 
+    _patientsList.sort((a, b) => a.lastName.compareTo(b.lastName));
+
     return response;
   }
 
@@ -191,7 +193,8 @@ class CardUserState extends State<CardUser>
                       ),
                     );
                   } else if ((snapshot.data != null &&
-                      (snapshot.data.data).length == 0) || _filteredPatientsList.isEmpty) {
+                          (snapshot.data.data).length == 0) ||
+                      _filteredPatientsList.isEmpty) {
                     return Center(
                       child: Container(
                         key: Key('box'),
@@ -235,8 +238,8 @@ class CardUserState extends State<CardUser>
                         child: DataTable(
                           columns: const [
                             DataColumn(label: Text('')),
-                            DataColumn(label: Text('Nombre')),
                             DataColumn(label: Text('Apellido')),
+                            DataColumn(label: Text('Nombre')),
                             DataColumn(label: Text('Edad')),
                             DataColumn(label: Text('Email')),
                             DataColumn(label: Text('')),
@@ -264,7 +267,7 @@ class CardUserState extends State<CardUser>
                               ),
                               DataCell(
                                 Text(
-                                  '${patient.firstName}',
+                                  '${patient.lastName}',
                                   style: GoogleFonts.nunito(
                                     textStyle: TextStyle(
                                       color: Colors.grey.shade700,
@@ -275,7 +278,7 @@ class CardUserState extends State<CardUser>
                               ),
                               DataCell(
                                 Text(
-                                  '${patient.lastName}',
+                                  '${patient.firstName}',
                                   style: GoogleFonts.nunito(
                                     textStyle: TextStyle(
                                       color: Colors.grey.shade700,

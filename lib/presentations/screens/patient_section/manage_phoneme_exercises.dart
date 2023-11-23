@@ -161,24 +161,6 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
           child: Stack(
             alignment: Alignment.topRight,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.arrow_back),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  Text(
-                    'Volver',
-                    style: GoogleFonts.nunito(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: Theme.of(context).primaryColor),
-                  ),
-                ],
-              ),
               Card(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 shape: RoundedRectangleBorder(
@@ -238,35 +220,39 @@ class ManagePhonemeExercisesState extends State<ManagePhonemeExercises>
                             );
                           }
                           if (snapshot.data != null && snapshot.data!.isEmpty) {
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Lottie.asset(
-                                    'assets/animations/NoResultsBox.json',
-                                    controller: _controller,
-                                    onLoaded: (composition) {
-                                      _controller
-                                        ..duration = composition.duration
-                                        ..repeat();
-                                    },
-                                    width:
-                                        200, // Ajusta el ancho de la animación según tus necesidades
-                                    height:
-                                        200, // Ajusta el alto de la animación según tus necesidades
-                                  ),
-                                  const SizedBox(
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                      'assets/animations/NoResultsBox.json',
+                                      controller: _controller,
+                                      onLoaded: (composition) {
+                                        _controller
+                                          ..duration = composition.duration
+                                          ..repeat();
+                                      },
+                                      width:
+                                          200, // Ajusta el ancho de la animación según tus necesidades
                                       height:
-                                          50), // Espacio entre la animación y el texto
-                                  Text(
-                                    "El paciente aún no posee prácticas asignadas",
-                                    style: GoogleFonts.nunito(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).primaryColorDark,
+                                          200, // Ajusta el alto de la animación según tus necesidades
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(
+                                        height:
+                                            50), // Espacio entre la animación y el texto
+                                    Text(
+                                      "El paciente aún no posee prácticas asignadas",
+                                      style: GoogleFonts.nunito(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        color:
+                                            Theme.of(context).primaryColorDark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           } else {
@@ -491,10 +477,9 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
       title: Text(
         'Agregar Práctica',
         style: GoogleFonts.nunito(
-          fontSize: 24,
-          color: Theme.of(context).primaryColor,
-          fontWeight: FontWeight.w800
-        ),
+            fontSize: 24,
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.w800),
       ),
       contentPadding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
       content: Container(
@@ -563,9 +548,8 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
           child: Text(
             'Guardar',
             style: TextStyle(
-              color: checkFieldsCompletion()
-                  ? colorList[4]
-                  : Colors.grey.shade400,
+              color:
+                  checkFieldsCompletion() ? colorList[4] : Colors.grey.shade400,
             ),
           ),
         ),

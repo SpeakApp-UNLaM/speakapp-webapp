@@ -119,7 +119,7 @@ class _RFIResultsState extends State<RFIResults>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircularPercentIndicator(
-                              radius: 40.0,
+                              radius: 45.0,
                               lineWidth: 8.0,
                               animation: true,
                               percent: _rfiResults
@@ -131,7 +131,7 @@ class _RFIResultsState extends State<RFIResults>
                                 "${(_rfiResults.where((element) => element.status == 'YES').length / _rfiResults.length * 100).toStringAsFixed(2)}%",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
+                                  fontSize: 14.0,
                                   fontFamily: 'IkkaRounded',
                                   color: colorList[4],
                                 ),
@@ -150,7 +150,7 @@ class _RFIResultsState extends State<RFIResults>
                               backgroundColor: Colors.grey.shade200,
                             ),
                             const SizedBox(
-                              width: 50,
+                              width: 45,
                             ),
                             CircularPercentIndicator(
                               radius: 40.0,
@@ -165,7 +165,7 @@ class _RFIResultsState extends State<RFIResults>
                                 "${(_rfiResults.where((element) => element.status == 'NO').length / _rfiResults.length * 100).toStringAsFixed(2)}%",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
+                                  fontSize: 14.0,
                                   fontFamily: 'IkkaRounded',
                                   color: Colors.redAccent,
                                 ),
@@ -222,7 +222,7 @@ class _RFIResultsState extends State<RFIResults>
                                 )),
                                 DataCell(Container(
                                   // Espaciado vertical
-                                  child: Text(
+                                  child: SelectableText(
                                     result.name
                                         .toUpperCase(), // Muestra el índice + 1
                                     textAlign: TextAlign.center,

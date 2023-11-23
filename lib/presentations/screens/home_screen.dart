@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:speak_app_web/config/theme/app_theme.dart';
 import 'package:speak_app_web/providers/auth_provider.dart';
@@ -19,6 +22,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isPatientsSelected = true; // Variable para controlar la selección
+  late Image? userImage;
+
+  @override
+  void initState() {
+    String? userImageData = context.read<AuthProvider>().loggedUser.imageData;
+    if (userImageData != null && userImageData != "") {
+      userImage = Image.memory(
+          base64.decode(
+              context.read<AuthProvider>().loggedUser.imageData as String),
+          fit: BoxFit.cover);
+    } else {
+      userImage = null;
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           ElevatedButton(
             onPressed: () => _openDialogShowProfessionalCode(),
-            child: TextPrimary(
-              text: 'Mostrar codigo',
-              color: Theme.of(context).primaryColor,
-            ),
+            child:Text(
+                      'Mostrar Código',
+                      style: GoogleFonts.nunito(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 20),
+                    ),
           ),
           const SizedBox(width: 30),
           PopupMenuButton(
@@ -57,58 +79,65 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
-              const PopupMenuItem<SampleItem>(
+              PopupMenuItem<SampleItem>(
                 value: SampleItem.config,
                 child: Row(
                   children: [
                     Icon(Icons.settings),
                     const SizedBox(width: 8),
-                    Text('Configuración'),
+                    Text(
+                      'Configuración',
+                      style: GoogleFonts.nunito(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16),
+                    ),
                   ],
                 ),
               ),
               const PopupMenuDivider(),
-              const PopupMenuItem<SampleItem>(
+              PopupMenuItem<SampleItem>(
                 value: SampleItem.logOut,
                 child: Row(
                   children: [
                     Icon(Icons.logout),
                     const SizedBox(width: 8),
-                    Text('Salir'),
+                    Text(
+                      'Salir',
+                      style: GoogleFonts.nunito(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16),
+                    ),
                   ],
                 ),
               ),
             ],
-            child: context.read<AuthProvider>().loggedUser.imageData == null
-                                      ? PhysicalModel(
-                                          color: Theme.of(context).primaryColor,
-                                          shadowColor: Theme.of(context).primaryColor,
-                                          elevation: 12,
-                                          shape: BoxShape.circle,
-                                          child: CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor: Theme.of(context)
-                                                .scaffoldBackgroundColor,
-                                            foregroundColor:
-                                                Theme.of(context).primaryColor,
-                                            child: const ClipOval(
-                                              child:
-                                                  Icon(Icons.person, size: 30),
-                                            ),
-                                          ),
-                                        )
-                                      : PhysicalModel(
-                                          color: Theme.of(context).primaryColor,
-                                          shape: BoxShape.circle,
-                                          shadowColor: Theme.of(context).primaryColor,
-                                          elevation: 12,
-                                          child: CircleAvatar(
-                                              radius: 20,
-                                              //TODO GET IMAGE FROM USER
-                                              backgroundImage:
-                                                  (context.read<AuthProvider>().loggedUser.imageData as Image)
-                                                      .image),
-                                        ),
+            child: userImage == null
+                ? PhysicalModel(
+                    color: Theme.of(context).primaryColor,
+                    shadowColor: Theme.of(context).primaryColor,
+                    elevation: 12,
+                    shape: BoxShape.circle,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      foregroundColor: Theme.of(context).primaryColor,
+                      child: const ClipOval(
+                        child: Icon(Icons.person, size: 30),
+                      ),
+                    ),
+                  )
+                : PhysicalModel(
+                    color: Theme.of(context).primaryColor,
+                    shape: BoxShape.circle,
+                    shadowColor: Theme.of(context).primaryColor,
+                    elevation: 12,
+                    child: CircleAvatar(
+                        radius: 20,
+                        //TODO GET IMAGE FROM USER
+                        backgroundImage: (userImage as Image).image)),
           ),
           SizedBox(width: 30)
         ],
